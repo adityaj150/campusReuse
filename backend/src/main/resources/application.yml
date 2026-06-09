@@ -1,0 +1,14 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/campusdb
+    username: campus
+    password: pass
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+jwt:
+  secret: 8C9D2A3F6B7E1D0C5A4F9B6E3D2C1A7B   # 32‑byte hex string (replace with a secure random value)
