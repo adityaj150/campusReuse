@@ -9,7 +9,7 @@ export interface Product {
 }
 
 export async function getProducts(): Promise<Product[]> {
-  const response = await fetch(new URL('../mock/products.json', import.meta.url))
+  const response = await fetch('/mock/products.json')
   if (!response.ok) {
     throw new Error(`Failed to load products: ${response.statusText}`)
   }

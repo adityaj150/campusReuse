@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Laptop Stand",
+    "category": "Hardware",
+    "location": "Tech Hub",
+    "price": 0,
+    "description": "Portable aluminum laptop stand available for 4-hour campus loan.",
+    "imageUrl": "/icons.svg"
+  },
+  {
+    "id": 2,
+    "name": "Projector Kit",
+    "category": "AV Equipment",
+    "location": "Student Union",
+    "price": 0,
+    "description": "Projector, HDMI cable, and screen bundle for event rooms.",
+    "imageUrl": "/icons.svg"
+  },
+  {
+    "id": 3,
+    "name": "Study Room Reservation",
+    "category": "Space",
+    "location": "Library East Wing",
+    "price": 0,
+    "description": "Reserve a quiet study room for group work sessions.",
+    "imageUrl": "/icons.svg"
+  },
+  {
+    "id": 4,
+    "name": "Microphone Set",
+    "category": "Audio",
+    "location": "Media Lab",
+    "price": 0,
+    "description": "Wireless microphone and speaker set for presentations.",
+    "imageUrl": "/icons.svg"
+  }
+]

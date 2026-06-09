@@ -7,6 +7,8 @@ export default function ProductDetail() {
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [showContact, setShowContact] = useState(false)
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     getProducts()
@@ -21,7 +23,13 @@ export default function ProductDetail() {
       })
       .catch((err) => setError(err.message || 'Unable to load listing'))
       .finally(() => setLoading(false))
-  }, [id])
+  }, [id]);
+
+  const handleSend = () => {
+    console.log('Message sent:', message);
+    setShowContact(false);
+    setMessage('');
+  };
 
   if (loading) {
     return (
@@ -74,7 +82,44 @@ export default function ProductDetail() {
         >
           Reserve
         </button>
+        <button
+          type="button"
+          onClick={() => setShowContact(true)}
+          className="mt-3 w-full rounded-lg bg-accentSoft px-4 py-3 text-sm font-semibold text-textHeading transition hover:bg-accent dark:bg-darkAccentSoft dark:text-darkSurface dark:hover:bg-darkAccent"
+        >
+          Contact Seller
+        </button>
       </aside>
+        {showContact && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black/30" role="dialog" aria-modal="true">
+            <div className="max-w-md rounded bg-white p-6 dark:bg-darkSurface">
+              <h3 className="mb-4 text-lg font-semibold">Message the seller</h3>
+              <textarea
+                className="w-full rounded border p-2"
+                rows={4}
+                placeholder="Your message..."
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+              <div className="mt-4 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowContact(false)}
+                  className="px-4 py-2 text-sm"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSend}
+                  className="rounded bg-accent px-4 py-2 text-white"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
     </section>
   )
 }

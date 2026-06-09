@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { getToken, logout } from '../services/auth'
 
 type NavItem =
   | { label: string; to: string }
@@ -7,9 +8,9 @@ type NavItem =
 
 const navItems: NavItem[] = [
   { label: 'Home', to: '/' },
+  { label: 'About', to: '/about' },
   { label: 'Listings', to: '/listings' },
   { label: 'Browse', href: '/#browse' },
-  { label: 'About', to: '/about' },
 ]
 
 export default function Header() {
@@ -41,7 +42,7 @@ export default function Header() {
           </div>
         </Link>
 
-        <nav className="hidden md:block" aria-label="Primary navigation">
+        <nav className="hidden md:flex items-center gap-4" aria-label="Primary navigation">
           <ul className="flex items-center gap-2 text-sm font-medium">
             {navItems.map((item) => (
               <li key={item.label}>
@@ -61,6 +62,21 @@ export default function Header() {
               </li>
             ))}
           </ul>
+          <div className="flex items-center">
+            {getToken() ? (
+              <button
+                type="button"
+                onClick={() => { logout(); window.location.reload(); }}
+                className={navLinkClass()}
+              >
+                Logout
+              </button>
+            ) : (
+              <Link to="/login" className={navLinkClass()}>
+                Login
+              </Link>
+            )}
+          </div>
         </nav>
 
         <button
@@ -104,6 +120,28 @@ export default function Header() {
               </li>
             ))}
           </ul>
+          <div className="mt-3">
+            {getToken() ? (
+              <button
+                type="button"
+                onClick={() => {
+                  logout();
+                  window.location.reload();
+                }}
+                className={`w-full ${navLinkClass()}`}
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                className={`block w-full ${navLinkClass()}`}
+                onClick={() => setOpen(false)}
+              >
+                Login
+              </Link>
+            )}
+          </div>
         </nav>
       )}
     </header>

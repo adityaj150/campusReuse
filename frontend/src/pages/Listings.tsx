@@ -1,39 +1,20 @@
-import { useEffect, useMemo, useState } from 'react'
-import CategoryNav from '../components/CategoryNav'
-import ProductCard from '../components/ProductCard'
-import SearchBar from '../components/SearchBar'
-import { getProducts, type Product } from '../services/api'
+// src/pages/Listings.tsx
+import { useProducts } from '../hooks/useProducts';
+import CategoryNav from '../components/CategoryNav';
+import ProductCard from '../components/ProductCard';
+import SearchBar from '../components/SearchBar';
 
 export default function Listings() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [selectedCategory, setSelectedCategory] = useState('All')
-  const [query, setQuery] = useState('')
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    getProducts()
-      .then(setProducts)
-      .catch((err) => setError(err.message || 'Unable to load listings'))
-      .finally(() => setLoading(false))
-  }, [])
-
-  const categories = useMemo(
-    () => ['All', ...Array.from(new Set(products.map((product) => product.category)))],
-    [products],
-  )
-
-  const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory
-      const matchesQuery = [product.name, product.category, product.location, product.description]
-        .join(' ')
-        .toLowerCase()
-        .includes(query.toLowerCase())
-
-      return matchesCategory && matchesQuery
-    })
-  }, [products, query, selectedCategory])
+  const {
+    filteredProducts,
+    categories,
+    loading,
+    error,
+    query,
+    setQuery,
+    selectedCategory,
+    setSelectedCategory,
+  } = useProducts();
 
   return (
     <section className="space-y-8">
@@ -44,7 +25,6 @@ export default function Listings() {
             Browse every available campus resource.
           </h1>
         </div>
-
         <SearchBar onSearch={setQuery} />
       </div>
 
@@ -70,5 +50,5 @@ export default function Listings() {
         </div>
       )}
     </section>
-  )
+  );
 }
