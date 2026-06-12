@@ -13,14 +13,20 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private String googleId;           // Google's unique subject ID
 
     @Column(nullable = false)
     private String name;
 
     @Column(nullable = false, unique = true)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private String email;
 
     @Column
     private String profilePicture;     // URL from Google
+
+    @Column
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    private String phoneNumber;        // Optional, for sharing with buyers
 }

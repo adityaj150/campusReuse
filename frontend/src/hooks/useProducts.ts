@@ -24,7 +24,7 @@ export function useProducts() {
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
       const catMatch = selectedCategory === 'All' || p.category === selectedCategory;
-      const queryMatch = [p.name, p.category, p.location, p.description]
+      const queryMatch = [p.title, p.category, p.condition, p.description]
         .join(' ')
         .toLowerCase()
         .includes(query.toLowerCase());

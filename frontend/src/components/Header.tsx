@@ -8,9 +8,9 @@ type NavItem =
 
 const navItems: NavItem[] = [
   { label: 'Home', to: '/' },
-  { label: 'About', to: '/about' },
   { label: 'Listings', to: '/listings' },
-  { label: 'Browse', href: '/#browse' },
+  { label: 'Dashboard', to: '/dashboard' },
+  { label: 'About', to: '/about' },
 ]
 
 export default function Header() {
