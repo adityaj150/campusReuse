@@ -1,17 +1,35 @@
 // src/services/auth.ts
-export interface LoginResponse { token: string; }
+
+const API_BASE = 'http://localhost:8080';
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  profilePicture?: string;
+}
+
+export interface AuthResponse {
+  token: string;
+  user: User;
+}
 
 /**
- * Mock login function – in a real app this would call your backend.
- * It stores a fake JWT in localStorage to simulate authentication.
+ * Send Google ID Token to backend to authenticate.
+ * Stores the JWT in localStorage on success.
  */
-export async function login(email: string, password: string): Promise<LoginResponse> {
-  // Simulate network latency
-  await new Promise((resolve) => setTimeout(resolve, 300));
-  // Create a simple base64 token (do NOT use this in production!)
-  const mockToken = btoa(`${email}:mock-jwt`);
-  localStorage.setItem('campusreuse_token', mockToken);
-  return { token: mockToken };
+export async function googleSignIn(idToken: string): Promise<AuthResponse> {
+  const res = await fetch(`${API_BASE}/api/auth/google`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ idToken }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error ?? 'Google authentication failed');
+  }
+  localStorage.setItem('campusreuse_token', data.token);
+  return data as AuthResponse;
 }
 
 /** Remove the stored token – logs the user out */
@@ -23,3 +41,5 @@ export function logout() {
 export function getToken(): string | null {
   return localStorage.getItem('campusreuse_token');
 }
+
+

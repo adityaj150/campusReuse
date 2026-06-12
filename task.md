@@ -1,14 +1,14 @@
 # Campus Reuse Marketplace – Task List
 
 - [x] Implement authentication UI (register & login pages)
-- [/] Scaffold Spring Boot backend with JWT authentication and email verification
-- [ ] Add Axios interceptor to attach JWT to requests
-- [ ] Build product CRUD UI (create, edit, delete, list)
+- [x] Scaffold Spring Boot backend with JWT authentication and email verification
+- [x] Add Axios interceptor to attach JWT to requests
+- [x] Build product CRUD UI (create, edit, delete, list)
 - [ ] Implement backend product APIs + image upload (store images in S3 or local storage)
 - [x] Add search bar and filter components (category, price range)
 - [ ] Wire search API with query parameters
 - [ ] Design "Contact Seller" modal and stub backend messaging endpoint
-- [ ] Write Dockerfile for frontend (multi‑stage build, serve with Nginx)
+- [x] Write Dockerfile for frontend (multi‑stage build, serve with Nginx)
 - [ ] Write Dockerfile for backend (Spring Boot JAR, PostgreSQL container)
 - [ ] Create AWS EC2 provisioning script (install Docker, pull images)
 - [ ] Deploy frontend and backend containers; configure Nginx reverse proxy
