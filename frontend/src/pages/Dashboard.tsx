@@ -21,10 +21,10 @@ export default function Dashboard() {
         const [receivedData, sentData, myProductsRes, meRes] = await Promise.all([
           getReceivedInquiries(),
           getSentInquiries(),
-          fetch('http://localhost:8080/api/products/mine', {
+          fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/products/mine`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('campusreuse_token')}` }
           }).then(r => r.json()),
-          fetch('http://localhost:8080/api/auth/me', {
+          fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/auth/me`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('campusreuse_token')}` }
           }).then(r => r.json())
         ]);

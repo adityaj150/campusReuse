@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: campusreuse_db
+    environment:
+      POSTGRES_USER: campus
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: campusdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - campus_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: campusreuse_backend
+    environment:
+      # Spring Boot connects to the db service
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/campusdb
+      - SPRING_DATASOURCE_USERNAME=campus
+      - SPRING_DATASOURCE_PASSWORD=pass
+      # In production, change this to a strong secret!
+      - JWT_SECRET=8C9D2A3F6B7E1D0C5A4F9B6E3D2C1A7B
+      # Google Client ID
+      - GOOGLE_CLIENT_ID=146501070525-agtk39bcu43red0gkoamn51k0m7784v3.apps.googleusercontent.com
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - campus_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Pass the public IP/domain of the EC2 instance here when building on AWS.
+        # e.g. http://1.2.3.4:8080
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:8080}
+    container_name: campusreuse_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - campus_network
+
+volumes:
+  postgres_data:
+
+networks:
+  campus_network:
