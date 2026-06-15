@@ -2,8 +2,10 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { getToken } from '../services/auth';
 
+import React from 'react';
+
 interface RequireAuthProps {
-  children: JSX.Element;
+  children: React.ReactNode;
 }
 
 export default function RequireAuth({ children }: RequireAuthProps) {

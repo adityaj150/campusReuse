@@ -9,7 +9,6 @@ export default function Home() {
     categories,
     loading,
     error,
-    query,
     setQuery,
     selectedCategory,
     setSelectedCategory,

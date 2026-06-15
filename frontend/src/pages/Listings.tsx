@@ -10,7 +10,6 @@ export default function Listings() {
     categories,
     loading,
     error,
-    query,
     setQuery,
     selectedCategory,
     setSelectedCategory,
