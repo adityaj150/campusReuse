@@ -23,25 +23,19 @@ public class ProductController {
     private final UserRepository userRepo;
     private final JwtUtil jwtUtil;
     private final com.campusreuse.backend.service.RecommendationService recommendationService;
+    private final com.campusreuse.backend.service.S3Service s3Service;
 
-    public ProductController(ProductRepository productRepo, UserRepository userRepo, JwtUtil jwtUtil, com.campusreuse.backend.service.RecommendationService recommendationService) {
+    public ProductController(ProductRepository productRepo, UserRepository userRepo, JwtUtil jwtUtil, 
+                             com.campusreuse.backend.service.RecommendationService recommendationService,
+                             com.campusreuse.backend.service.S3Service s3Service) {
         this.productRepo = productRepo;
         this.userRepo = userRepo;
         this.jwtUtil = jwtUtil;
         this.recommendationService = recommendationService;
+        this.s3Service = s3Service;
     }
 
     // ================= DTOs =================
-
-    @Getter @Setter
-    static class ProductRequest {
-        private String title;
-        private String description;
-        private String category;
-        private Double price;
-        private String condition;
-        private String imageUrl;
-    }
 
     @Getter @Setter
     static class StatusUpdateRequest {
@@ -83,19 +77,33 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<?> createProduct(@RequestHeader("Authorization") String authHeader,
-                                           @RequestBody ProductRequest req) {
+                                           @RequestParam("title") String title,
+                                           @RequestParam("description") String description,
+                                           @RequestParam("category") String category,
+                                           @RequestParam("price") Double price,
+                                           @RequestParam("condition") String condition,
+                                           @RequestPart(value = "image", required = false) org.springframework.web.multipart.MultipartFile image) {
         User user = getAuthenticatedUser(authHeader);
         if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
+        String imageUrl = null;
+        if (image != null && !image.isEmpty()) {
+            try {
+                imageUrl = s3Service.uploadImage(image);
+            } catch (java.io.IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Image upload failed"));
+            }
+        }
+
         Product product = Product.builder()
-                .title(req.getTitle())
-                .description(req.getDescription())
-                .category(req.getCategory())
-                .price(req.getPrice())
-                .condition(Product.Condition.valueOf(req.getCondition()))
+                .title(title)
+                .description(description)
+                .category(category)
+                .price(price)
+                .condition(Product.Condition.valueOf(condition))
                 .status(Product.Status.AVAILABLE)
                 .seller(user)
-                .imageUrl(req.getImageUrl())
+                .imageUrl(imageUrl)
                 .build();
 
         productRepo.save(product);
@@ -105,7 +113,12 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id,
                                            @RequestHeader("Authorization") String authHeader,
-                                           @RequestBody ProductRequest req) {
+                                           @RequestParam("title") String title,
+                                           @RequestParam("description") String description,
+                                           @RequestParam("category") String category,
+                                           @RequestParam("price") Double price,
+                                           @RequestParam("condition") String condition,
+                                           @RequestPart(value = "image", required = false) org.springframework.web.multipart.MultipartFile image) {
         User user = getAuthenticatedUser(authHeader);
         if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
@@ -116,12 +129,19 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Not your product"));
         }
 
-        product.setTitle(req.getTitle());
-        product.setDescription(req.getDescription());
-        product.setCategory(req.getCategory());
-        product.setPrice(req.getPrice());
-        product.setCondition(Product.Condition.valueOf(req.getCondition()));
-        product.setImageUrl(req.getImageUrl());
+        if (image != null && !image.isEmpty()) {
+            try {
+                product.setImageUrl(s3Service.uploadImage(image));
+            } catch (java.io.IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Image upload failed"));
+            }
+        }
+
+        product.setTitle(title);
+        product.setDescription(description);
+        product.setCategory(category);
+        product.setPrice(price);
+        product.setCondition(Product.Condition.valueOf(condition));
 
         productRepo.save(product);
         return ResponseEntity.ok(product);

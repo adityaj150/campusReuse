@@ -1,5 +1,5 @@
 // src/pages/CreateProduct.tsx
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createProduct } from '../services/api';
 
@@ -7,14 +7,14 @@ export default function CreateProduct() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
     title: '',
     category: 'Electronics',
     price: '',
     condition: 'GOOD',
-    description: '',
-    imageUrl: ''
+    description: ''
   });
 
   const categories = ['Electronics', 'Books', 'Stationery', 'Hostel Essentials', 'Bicycles', 'Other'];
@@ -29,10 +29,19 @@ export default function CreateProduct() {
     setLoading(true);
     setError(null);
     try {
-      const payload = {
-        ...formData,
-        price: parseFloat(formData.price) || 0
-      };
+      const payload = new FormData();
+      payload.append('title', formData.title);
+      payload.append('category', formData.category);
+      payload.append('price', (parseFloat(formData.price) || 0).toString());
+      payload.append('condition', formData.condition);
+      payload.append('description', formData.description);
+      
+      if (fileInputRef.current?.files?.[0]) {
+        payload.append('image', fileInputRef.current.files[0]);
+      } else {
+        throw new Error('Please select an image or take a photo');
+      }
+
       const newProduct = await createProduct(payload);
       navigate(`/product/${newProduct.id}`);
     } catch (err: any) {
@@ -76,9 +85,9 @@ export default function CreateProduct() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-textHeading dark:text-white">Image URL</label>
-            <input required type="url" name="imageUrl" value={formData.imageUrl} onChange={handleChange} className="mt-1 block w-full rounded border border-border p-2 dark:border-darkBorder dark:bg-darkSurface" placeholder="https://example.com/image.jpg" />
-            <p className="mt-1 text-xs text-text dark:text-darkText">Provide a direct link to an image for now.</p>
+            <label className="block text-sm font-medium text-textHeading dark:text-white">Product Image</label>
+            <input required type="file" accept="image/*" capture="environment" ref={fileInputRef} className="mt-1 block w-full rounded border border-border p-2 file:mr-4 file:rounded file:border-0 file:bg-accent file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-emerald-800 dark:border-darkBorder dark:bg-darkSurface dark:file:bg-darkAccent" />
+            <p className="mt-1 text-xs text-text dark:text-darkText">You can choose a file or take a photo with your camera.</p>
           </div>
 
           <div>

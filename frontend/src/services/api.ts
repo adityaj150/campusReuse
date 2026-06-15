@@ -48,15 +48,18 @@ export async function getProductById(id: number): Promise<Product> {
   return response.json();
 }
 
-export async function createProduct(productData: any): Promise<Product> {
+export async function createProduct(productData: FormData): Promise<Product> {
   const response = await fetch(`${API_BASE}/api/products`, {
     method: 'POST',
-    headers: getAuthHeaders(),
-    body: JSON.stringify(productData),
+    headers: {
+      'Authorization': getAuthHeaders()['Authorization'] || '',
+    },
+    body: productData,
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to create product`);
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.error || 'Failed to create product');
   }
 
   return response.json();
