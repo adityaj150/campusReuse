@@ -11,7 +11,7 @@
 - [x] Write Dockerfile for frontend (multi‑stage build, serve with Nginx)
 - [x] Write Dockerfile for backend (Spring Boot JAR, PostgreSQL container)
 - [x] Create AWS EC2 provisioning script (install Docker, pull images)
-- [ ] Deploy frontend and backend containers; configure Nginx reverse proxy
+- [x] Deploy frontend and backend containers; configure Nginx reverse proxy
 - [ ] Verify end‑to‑end flow on AWS deployment
 - [ ] (Version 2) Add view‑tracking on product pages for recommendation data
 - [ ] (Version 2) Implement simple "also‑liked" recommendation query

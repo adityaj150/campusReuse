@@ -29,6 +29,9 @@ export async function getProducts(search?: string): Promise<Product[]> {
   const response = await fetch(url, { headers: getAuthHeaders() });
   
   if (!response.ok) {
+    if (response.status === 401 || response.status === 403) {
+      throw new Error('Please login first to view campus resources.');
+    }
     throw new Error(`Failed to load products: ${response.statusText}`);
   }
 
