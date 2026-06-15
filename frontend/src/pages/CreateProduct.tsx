@@ -86,7 +86,7 @@ export default function CreateProduct() {
 
           <div>
             <label className="block text-sm font-medium text-textHeading dark:text-white">Product Image</label>
-            <input required type="file" accept="image/*" capture="environment" ref={fileInputRef} className="mt-1 block w-full rounded border border-border p-2 file:mr-4 file:rounded file:border-0 file:bg-accent file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-emerald-800 dark:border-darkBorder dark:bg-darkSurface dark:file:bg-darkAccent" />
+            <input required type="file" accept="image/*" ref={fileInputRef} className="mt-1 block w-full rounded border border-border p-2 file:mr-4 file:rounded file:border-0 file:bg-accent file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-emerald-800 dark:border-darkBorder dark:bg-darkSurface dark:file:bg-darkAccent" />
             <p className="mt-1 text-xs text-text dark:text-darkText">You can choose a file or take a photo with your camera.</p>
           </div>
 

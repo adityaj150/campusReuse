@@ -17,7 +17,7 @@ public interface ProductViewRepository extends JpaRepository<ProductView, Long> 
     Optional<ProductView> findByUserAndProduct(User user, Product product);
 
     // Get a user's recently viewed products, ordered by most recent first
-    @Query("SELECT pv.product FROM ProductView pv WHERE pv.user.id = :userId ORDER BY pv.viewedAt DESC")
+    @Query("SELECT p FROM ProductView pv JOIN pv.product p WHERE pv.user.id = :userId ORDER BY pv.viewedAt DESC")
     List<Product> findRecentlyViewedProductsByUser(Long userId, Pageable pageable);
 
     // Find all users who viewed a specific product
