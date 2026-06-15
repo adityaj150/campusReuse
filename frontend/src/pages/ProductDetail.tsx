@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { getProductById, createInquiry, type Product } from '../services/api'
+import { getProductById, createInquiry, logProductView, type Product } from '../services/api'
 
 export default function ProductDetail() {
   const { id } = useParams()
@@ -12,7 +12,11 @@ export default function ProductDetail() {
   useEffect(() => {
     if (!id) return;
     getProductById(Number(id))
-      .then(setProduct)
+      .then((p) => {
+        setProduct(p);
+        // Log view for recommendations (fail silently so it doesn't break UI)
+        logProductView(p.id).catch(() => {});
+      })
       .catch((err) => setError(err.message || 'Unable to load listing'))
       .finally(() => setLoading(false))
   }, [id]);

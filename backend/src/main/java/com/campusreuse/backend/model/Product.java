@@ -17,7 +17,7 @@ public class Product {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, length = 1000)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @Column(nullable = false)
@@ -39,7 +39,7 @@ public class Product {
     @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User seller;
 
-    @Column(length = 500)
+    @Column(columnDefinition = "TEXT")
     private String imageUrl; // Simple URL for V1
 
     @Column(nullable = false, updatable = false)

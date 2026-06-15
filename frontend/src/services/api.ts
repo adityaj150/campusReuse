@@ -114,3 +114,24 @@ export async function respondToInquiry(id: number, action: string, phoneNumber?:
   }
   return response.json();
 }
+
+// Recommendations
+
+export async function logProductView(productId: number): Promise<void> {
+  await fetch(`${API_BASE}/api/products/${productId}/view`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+  });
+}
+
+export async function getRecommendations(): Promise<Product[]> {
+  const response = await fetch(`${API_BASE}/api/products/me/recommendations`, { headers: getAuthHeaders() });
+  if (!response.ok) return [];
+  return response.json();
+}
+
+export async function getRecentlyViewed(): Promise<Product[]> {
+  const response = await fetch(`${API_BASE}/api/products/me/recently-viewed`, { headers: getAuthHeaders() });
+  if (!response.ok) return [];
+  return response.json();
+}

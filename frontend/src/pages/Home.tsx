@@ -3,6 +3,8 @@ import CategoryNav from '../components/CategoryNav'
 import ProductCard from '../components/ProductCard'
 import SearchBar from '../components/SearchBar'
 
+import Recommendations from '../components/Recommendations'
+
 export default function Home() {
   const {
     filteredProducts,
@@ -29,6 +31,8 @@ export default function Home() {
 
         <SearchBar onSearch={setQuery} />
       </div>
+
+      <Recommendations />
 
       <CategoryNav categories={categories} selected={selectedCategory} onSelect={setSelectedCategory} />
 

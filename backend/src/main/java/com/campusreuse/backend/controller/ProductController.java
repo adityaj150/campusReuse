@@ -22,11 +22,13 @@ public class ProductController {
     private final ProductRepository productRepo;
     private final UserRepository userRepo;
     private final JwtUtil jwtUtil;
+    private final com.campusreuse.backend.service.RecommendationService recommendationService;
 
-    public ProductController(ProductRepository productRepo, UserRepository userRepo, JwtUtil jwtUtil) {
+    public ProductController(ProductRepository productRepo, UserRepository userRepo, JwtUtil jwtUtil, com.campusreuse.backend.service.RecommendationService recommendationService) {
         this.productRepo = productRepo;
         this.userRepo = userRepo;
         this.jwtUtil = jwtUtil;
+        this.recommendationService = recommendationService;
     }
 
     // ================= DTOs =================
@@ -146,5 +148,37 @@ public class ProductController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("error", "Invalid status"));
         }
+    }
+
+    // ================= Recommendation Endpoints =================
+
+    @PostMapping("/{id}/view")
+    public ResponseEntity<?> logProductView(@PathVariable Long id, @RequestHeader("Authorization") String authHeader) {
+        User user = getAuthenticatedUser(authHeader);
+        if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        Product product = productRepo.findById(id).orElse(null);
+        if (product == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        recommendationService.logProductView(user, product);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/me/recommendations")
+    public ResponseEntity<?> getRecommendations(@RequestHeader("Authorization") String authHeader) {
+        User user = getAuthenticatedUser(authHeader);
+        if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        List<Product> recommendations = recommendationService.getRecommendations(user, 3);
+        return ResponseEntity.ok(recommendations);
+    }
+
+    @GetMapping("/me/recently-viewed")
+    public ResponseEntity<?> getRecentlyViewed(@RequestHeader("Authorization") String authHeader) {
+        User user = getAuthenticatedUser(authHeader);
+        if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        List<Product> recentlyViewed = recommendationService.getRecentlyViewed(user.getId());
+        return ResponseEntity.ok(recentlyViewed);
     }
 }
