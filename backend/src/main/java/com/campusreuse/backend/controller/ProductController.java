@@ -25,17 +25,20 @@ public class ProductController {
     private final com.campusreuse.backend.service.RecommendationService recommendationService;
     private final com.campusreuse.backend.service.S3Service s3Service;
     private final com.campusreuse.backend.service.ProductCacheService productCacheService;
+    private final com.campusreuse.backend.service.NlpClientService nlpClientService;
 
     public ProductController(ProductRepository productRepo, UserRepository userRepo, JwtUtil jwtUtil, 
                              com.campusreuse.backend.service.RecommendationService recommendationService,
                              com.campusreuse.backend.service.S3Service s3Service,
-                             com.campusreuse.backend.service.ProductCacheService productCacheService) {
+                             com.campusreuse.backend.service.ProductCacheService productCacheService,
+                             com.campusreuse.backend.service.NlpClientService nlpClientService) {
         this.productRepo = productRepo;
         this.userRepo = userRepo;
         this.jwtUtil = jwtUtil;
         this.recommendationService = recommendationService;
         this.s3Service = s3Service;
         this.productCacheService = productCacheService;
+        this.nlpClientService = nlpClientService;
     }
 
     // ================= DTOs =================
@@ -108,6 +111,7 @@ public class ProductController {
 
         productRepo.save(product);
         productCacheService.evictProductCaches();
+        nlpClientService.indexProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 
@@ -146,6 +150,7 @@ public class ProductController {
 
         productRepo.save(product);
         productCacheService.evictProductCaches();
+        nlpClientService.indexProduct(product);
         return ResponseEntity.ok(product);
     }
 
@@ -167,6 +172,7 @@ public class ProductController {
             product.setStatus(Product.Status.valueOf(req.getStatus().toUpperCase()));
             productRepo.save(product);
             productCacheService.evictProductCaches();
+            nlpClientService.indexProduct(product);
             return ResponseEntity.ok(product);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("error", "Invalid status"));

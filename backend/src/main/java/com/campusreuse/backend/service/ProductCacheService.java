@@ -20,9 +20,11 @@ import java.util.List;
 public class ProductCacheService {
 
     private final ProductRepository productRepo;
+    private final NlpClientService nlpClientService;
 
-    public ProductCacheService(ProductRepository productRepo) {
+    public ProductCacheService(ProductRepository productRepo, NlpClientService nlpClientService) {
         this.productRepo = productRepo;
+        this.nlpClientService = nlpClientService;
     }
 
     /**
@@ -32,6 +34,18 @@ public class ProductCacheService {
     @Cacheable(value = "products", key = "#search != null ? #search : 'all'")
     public List<Product> getAvailableProducts(String search) {
         if (search != null && !search.trim().isEmpty()) {
+            List<Long> semanticIds = nlpClientService.searchProducts(search, 10);
+            if (semanticIds != null && !semanticIds.isEmpty()) {
+                List<Product> products = productRepo.findAllById(semanticIds);
+                // Sort products to match the semantic relevance order returned by the NLP service
+                return semanticIds.stream()
+                        .map(id -> products.stream()
+                                .filter(p -> p.getId().equals(id) && p.getStatus() == Product.Status.AVAILABLE)
+                                .findFirst().orElse(null))
+                        .filter(java.util.Objects::nonNull)
+                        .collect(java.util.stream.Collectors.toList());
+            }
+            // Fallback to standard substring search if NLP service returns no results or fails
             return productRepo.searchAvailableProducts(search, Product.Status.AVAILABLE);
         }
         return productRepo.findByStatusOrderByCreatedAtDesc(Product.Status.AVAILABLE);
@@ -51,8 +65,8 @@ public class ProductCacheService {
      * Call this after any create, update, or delete operation.
      */
     @Caching(evict = {
-        @CacheEvict(value = "products", allEntries = true),
-        @CacheEvict(value = "product", allEntries = true)
+            @CacheEvict(value = "products", allEntries = true),
+            @CacheEvict(value = "product", allEntries = true)
     })
     public void evictProductCaches() {
         // This method intentionally has no body.

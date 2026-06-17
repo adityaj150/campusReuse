@@ -40,11 +40,27 @@ services:
       - JWT_SECRET=8C9D2A3F6B7E1D0C5A4F9B6E3D2C1A7B
       # Google Client ID
       - GOOGLE_CLIENT_ID=146501070525-agtk39bcu43red0gkoamn51k0m7784v3.apps.googleusercontent.com
+      # NLP Service
+      - NLP_SERVICE_URL=http://nlp-service:8000
     ports:
       - "8080:8080"
     depends_on:
       - db
       - redis
+      - nlp-service
+    networks:
+      - campus_network
+
+  nlp-service:
+    build:
+      context: ./nlp-service
+      dockerfile: Dockerfile
+    container_name: campusreuse_nlp
+    environment:
+      # Pass the backend URL so the NLP service can sync existing products on startup
+      - NLP_BACKEND_SYNC_URL=http://backend:8080
+    ports:
+      - "8000:8000"
     networks:
       - campus_network
 
