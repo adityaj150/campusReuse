@@ -24,15 +24,18 @@ public class ProductController {
     private final JwtUtil jwtUtil;
     private final com.campusreuse.backend.service.RecommendationService recommendationService;
     private final com.campusreuse.backend.service.S3Service s3Service;
+    private final com.campusreuse.backend.service.ProductCacheService productCacheService;
 
     public ProductController(ProductRepository productRepo, UserRepository userRepo, JwtUtil jwtUtil, 
                              com.campusreuse.backend.service.RecommendationService recommendationService,
-                             com.campusreuse.backend.service.S3Service s3Service) {
+                             com.campusreuse.backend.service.S3Service s3Service,
+                             com.campusreuse.backend.service.ProductCacheService productCacheService) {
         this.productRepo = productRepo;
         this.userRepo = userRepo;
         this.jwtUtil = jwtUtil;
         this.recommendationService = recommendationService;
         this.s3Service = s3Service;
+        this.productCacheService = productCacheService;
     }
 
     // ================= DTOs =================
@@ -54,17 +57,14 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<Product>> getAvailableProducts(@RequestParam(value = "search", required = false) String search) {
-        if (search != null && !search.trim().isEmpty()) {
-            return ResponseEntity.ok(productRepo.searchAvailableProducts(search, Product.Status.AVAILABLE));
-        }
-        return ResponseEntity.ok(productRepo.findByStatusOrderByCreatedAtDesc(Product.Status.AVAILABLE));
+        return ResponseEntity.ok(productCacheService.getAvailableProducts(search));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getProduct(@PathVariable Long id) {
-        return productRepo.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        Product product = productCacheService.getProductById(id);
+        if (product == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.ok(product);
     }
 
     @GetMapping("/mine")
@@ -107,6 +107,7 @@ public class ProductController {
                 .build();
 
         productRepo.save(product);
+        productCacheService.evictProductCaches();
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 
@@ -144,6 +145,7 @@ public class ProductController {
         product.setCondition(Product.Condition.valueOf(condition));
 
         productRepo.save(product);
+        productCacheService.evictProductCaches();
         return ResponseEntity.ok(product);
     }
 
@@ -164,6 +166,7 @@ public class ProductController {
         try {
             product.setStatus(Product.Status.valueOf(req.getStatus().toUpperCase()));
             productRepo.save(product);
+            productCacheService.evictProductCaches();
             return ResponseEntity.ok(product);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("error", "Invalid status"));

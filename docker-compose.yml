@@ -15,6 +15,14 @@ services:
     networks:
       - campus_network
 
+  redis:
+    image: redis:7-alpine
+    container_name: campusreuse_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - campus_network
+
   backend:
     build:
       context: ./backend
@@ -25,6 +33,9 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/campusdb
       - SPRING_DATASOURCE_USERNAME=campus
       - SPRING_DATASOURCE_PASSWORD=pass
+      # Redis caching
+      - REDIS_HOST=redis
+      - CACHE_TYPE=redis
       # In production, change this to a strong secret!
       - JWT_SECRET=8C9D2A3F6B7E1D0C5A4F9B6E3D2C1A7B
       # Google Client ID
@@ -33,6 +44,7 @@ services:
       - "8080:8080"
     depends_on:
       - db
+      - redis
     networks:
       - campus_network
 
