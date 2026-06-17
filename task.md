@@ -15,7 +15,7 @@
 - [x] Verify end‑to‑end flow on AWS deployment
 - [ ] (Version 2) Add view‑tracking on product pages for recommendation data
 - [ ] (Version 2) Build a cosine-similarity recommendation engine for personalized suggestions
-- [ ] (Version 2) Add Redis-based caching for frequently accessed product listings and search results
+- [x] (Version 2) Add Redis-based caching for frequently accessed product listings and search results
 - [ ] (Version 3) Set up Python NLP service (sentence‑transformers) for semantic search
 - [ ] (Version 3) Expose semantic‑search endpoint in backend
 - [ ] (Version 4) Compute price range statistics per category

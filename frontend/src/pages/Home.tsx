@@ -3,7 +3,7 @@ import { useProducts } from '../hooks/useProducts'
 import CategoryNav from '../components/CategoryNav'
 import ProductCard from '../components/ProductCard'
 import SearchBar from '../components/SearchBar'
-import Recommendations from '../components/Recommendations'
+import { RecentlyViewed } from '../components/Recommendations'
 
 export default function Home() {
   const {
@@ -43,8 +43,6 @@ export default function Home() {
         <SearchBar onSearch={setQuery} />
       </div>
 
-      <Recommendations />
-
       <CategoryNav categories={categories} selected={selectedCategory} onSelect={setSelectedCategory} />
 
       {loading ? (
@@ -66,6 +64,8 @@ export default function Home() {
           )}
         </div>
       )}
+
+      <RecentlyViewed />
     </section>
   )
 }

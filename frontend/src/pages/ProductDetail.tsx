@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getProductById, createInquiry, logProductView, type Product } from '../services/api'
+import { RecommendedForYou } from '../components/Recommendations'
 
 export default function ProductDetail() {
   const { id } = useParams()
@@ -54,6 +55,7 @@ export default function ProductDetail() {
   }
 
   return (
+    <>
     <section className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
       <div className="overflow-hidden rounded-lg border border-border bg-surface shadow-soft dark:border-darkBorder dark:bg-darkSurfaceMuted">
         <div className="flex aspect-[16/9] items-center justify-center bg-surfaceSecondary dark:bg-darkAccentSoft">
@@ -109,5 +111,7 @@ export default function ProductDetail() {
         </div>
       </aside>
     </section>
+    <RecommendedForYou />
+    </>
   )
 }
