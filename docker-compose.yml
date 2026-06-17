@@ -53,9 +53,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        # Pass the public IP/domain of the EC2 instance here when building on AWS.
-        # e.g. http://1.2.3.4:8080
-        - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:8080}
+        # Empty = use relative URLs via Nginx reverse proxy (no CORS issues)
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL:-}
     container_name: campusreuse_frontend
     ports:
       - "80:80"
