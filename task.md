@@ -13,14 +13,14 @@
 - [x] Create AWS EC2 provisioning script (install Docker, pull images)
 - [x] Deploy frontend and backend containers; configure Nginx reverse proxy
 - [x] Verify end‑to‑end flow on AWS deployment
-- [ ] (Version 2) Add view‑tracking on product pages for recommendation data
-- [ ] (Version 2) Build a cosine-similarity recommendation engine for personalized suggestions
+- [x] (Version 2) Add view‑tracking on product pages for recommendation data
+- [x] (Version 2) Build a cosine-similarity recommendation engine for personalized suggestions
 - [x] (Version 2) Add Redis-based caching for frequently accessed product listings and search results
-- [ ] (Version 3) Set up Python NLP service (sentence‑transformers) for semantic search
-- [ ] (Version 3) Expose semantic‑search endpoint in backend
+- [x] (Version 3) Set up Python NLP service (sentence‑transformers) for semantic search
+- [x] (Version 3) Expose semantic‑search endpoint in backend
 - [ ] (Version 4) Compute price range statistics per category
 - [ ] (Version 4) Show price suggestion UI on product form
 - [ ] (Version 5) Expand PostgreSQL schema to 8+ relational entities (Reviews, Categories, Saved Items, etc.)
-- [ ] (Version 5) Integrate AWS S3 for image storage to reduce database/local overhead
+- [x] (Version 5) Integrate AWS S3 for image storage to reduce database/local overhead
 - [ ] (Version 5) Set up GitHub Actions for CI/CD automation
 *Mark tasks as in‑progress (`[/]`) when you start them and completed (`[x]`) when done.*

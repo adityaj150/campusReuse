@@ -42,6 +42,9 @@ services:
       - GOOGLE_CLIENT_ID=146501070525-agtk39bcu43red0gkoamn51k0m7784v3.apps.googleusercontent.com
       # NLP Service
       - NLP_SERVICE_URL=http://nlp-service:8000
+      # AWS S3 Credentials
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     ports:
       - "8080:8080"
     depends_on:
