@@ -138,3 +138,26 @@ export async function getRecentlyViewed(): Promise<Product[]> {
   if (!response.ok) return [];
   return response.json();
 }
+
+// Saved / Liked Items
+
+export async function toggleSavedItem(productId: number): Promise<{ saved: boolean }> {
+  const response = await fetch(`${API_BASE}/api/saved/toggle/${productId}`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+  });
+  if (!response.ok) throw new Error('Failed to toggle saved item');
+  return response.json();
+}
+
+export async function getSavedItems(): Promise<Product[]> {
+  const response = await fetch(`${API_BASE}/api/saved`, { headers: getAuthHeaders() });
+  if (!response.ok) return [];
+  return response.json();
+}
+
+export async function getSavedProductIds(): Promise<number[]> {
+  const response = await fetch(`${API_BASE}/api/saved/ids`, { headers: getAuthHeaders() });
+  if (!response.ok) return [];
+  return response.json();
+}

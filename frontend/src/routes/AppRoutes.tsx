@@ -8,6 +8,7 @@ import About from '../pages/About'
 import NotFound from '../pages/NotFound'
 import RequireAuth from '../components/RequireAuth'
 import Login from '../pages/Login'
+import LikedItems from '../pages/LikedItems'
 
 export default function AppRoutes() {
   return (
@@ -15,6 +16,7 @@ export default function AppRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/listings" element={<RequireAuth><Listings /></RequireAuth>} />
+      <Route path="/liked" element={<RequireAuth><LikedItems /></RequireAuth>} />
       <Route path="/product/:id" element={<RequireAuth><ProductDetail /></RequireAuth>} />
       <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
       <Route path="/create-product" element={<RequireAuth><CreateProduct /></RequireAuth>} />

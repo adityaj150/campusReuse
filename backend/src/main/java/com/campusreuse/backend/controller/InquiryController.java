@@ -26,12 +26,14 @@ public class InquiryController {
     private final ProductRepository productRepo;
     private final UserRepository userRepo;
     private final JwtUtil jwtUtil;
+    private final com.campusreuse.backend.service.EmailService emailService;
 
-    public InquiryController(InquiryRepository inquiryRepo, ProductRepository productRepo, UserRepository userRepo, JwtUtil jwtUtil) {
+    public InquiryController(InquiryRepository inquiryRepo, ProductRepository productRepo, UserRepository userRepo, JwtUtil jwtUtil, com.campusreuse.backend.service.EmailService emailService) {
         this.inquiryRepo = inquiryRepo;
         this.productRepo = productRepo;
         this.userRepo = userRepo;
         this.jwtUtil = jwtUtil;
+        this.emailService = emailService;
     }
 
     // Helper to get authenticated user
@@ -118,6 +120,9 @@ public class InquiryController {
                 .status(Inquiry.Status.PENDING)
                 .build();
         inquiryRepo.save(inquiry);
+
+        // Send email notification to the seller
+        emailService.sendInterestNotification(inquiry);
 
         return ResponseEntity.ok(toDto(inquiry, user));
     }

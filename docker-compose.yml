@@ -45,6 +45,10 @@ services:
       # AWS S3 Credentials
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      # Email Notifications (Gmail SMTP)
+      - MAIL_USERNAME=${MAIL_USERNAME:-}
+      - MAIL_APP_PASSWORD=${MAIL_APP_PASSWORD:-}
+      - APP_BASE_URL=${APP_BASE_URL:-http://32.236.43.83.nip.io}
     ports:
       - "8080:8080"
     depends_on:

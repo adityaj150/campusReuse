@@ -1,5 +1,7 @@
 // src/pages/Listings.tsx
+import { useState, useEffect } from 'react';
 import { useProducts } from '../hooks/useProducts';
+import { getSavedProductIds } from '../services/api';
 import CategoryNav from '../components/CategoryNav';
 import ProductCard from '../components/ProductCard';
 import SearchBar from '../components/SearchBar';
@@ -14,6 +16,21 @@ export default function Listings() {
     selectedCategory,
     setSelectedCategory,
   } = useProducts();
+
+  const [savedIds, setSavedIds] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    getSavedProductIds().then(ids => setSavedIds(new Set(ids))).catch(() => {});
+  }, []);
+
+  const handleToggleSave = (productId: number, newState: boolean) => {
+    setSavedIds(prev => {
+      const next = new Set(prev);
+      if (newState) next.add(productId);
+      else next.delete(productId);
+      return next;
+    });
+  };
 
   return (
     <section className="space-y-8">
@@ -40,7 +57,14 @@ export default function Listings() {
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" id="browse">
           {filteredProducts.length > 0 ? (
-            filteredProducts.map((product) => <ProductCard key={product.id} product={product} />)
+            filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                isSaved={savedIds.has(product.id)}
+                onToggleSave={handleToggleSave}
+              />
+            ))
           ) : (
             <div className="rounded-lg border border-border bg-surface p-8 text-center text-textHeading shadow-soft dark:border-darkBorder dark:bg-darkSurfaceMuted dark:text-white sm:col-span-2 lg:col-span-3">
               No listings matched your search.

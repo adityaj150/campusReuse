@@ -23,6 +23,17 @@ spring:
     type: ${CACHE_TYPE:none}
     redis:
       time-to-live: 600000   # 10 minutes in milliseconds
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_APP_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 jwt:
   secret: 8C9D2A3F6B7E1D0C5A4F9B6E3D2C1A7B   # 32-byte hex string (replace with a secure random value)
@@ -34,3 +45,6 @@ aws:
   region: ap-southeast-2
   s3:
     bucket: campus-reuse-images
+
+app:
+  base-url: ${APP_BASE_URL:http://localhost:80}

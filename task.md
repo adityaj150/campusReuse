@@ -18,9 +18,11 @@
 - [x] (Version 2) Add Redis-based caching for frequently accessed product listings and search results
 - [x] (Version 3) Set up Python NLP service (sentence‑transformers) for semantic search
 - [x] (Version 3) Expose semantic‑search endpoint in backend
-- [ ] (Version 4) Compute price range statistics per category
-- [ ] (Version 4) Show price suggestion UI on product form
-- [ ] (Version 5) Expand PostgreSQL schema to 8+ relational entities (Reviews, Categories, Saved Items, etc.)
-- [x] (Version 5) Integrate AWS S3 for image storage to reduce database/local overhead
-- [ ] (Version 5) Set up GitHub Actions for CI/CD automation
+- [x] (Version 4) Setup Spring Boot Mail + Gmail SMTP for email notifications
+- [x] (Version 4) Email notification to seller when buyer clicks "I'm Interested" (inquiry created → seller gets email with product details)
+- [x] (Version 4) Seller inquiry management — Accept/Reject inquiries, share contact on accept
+- [x] (Version 4) Liked/Saved Items — Heart icon on product cards (turns red on click, Instagram-style hover effect)
+- [x] (Version 4) Liked Items tab/page — dedicated page to view all saved/liked products
+- [x] (Version 4) Integrate AWS S3 for image storage to reduce database/local overhead
+- [x] (Version 5) Set up GitHub Actions for CI/CD automation
 *Mark tasks as in‑progress (`[/]`) when you start them and completed (`[x]`) when done.*
