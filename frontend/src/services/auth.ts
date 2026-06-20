@@ -21,7 +21,10 @@ export interface AuthResponse {
 export async function googleSignIn(idToken: string): Promise<AuthResponse> {
   const res = await fetch(`${API_BASE}/api/auth/google`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
     body: JSON.stringify({ idToken }),
   });
   const data = await res.json();
