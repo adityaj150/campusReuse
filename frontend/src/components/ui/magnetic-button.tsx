@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useRef, ReactNode } from "react";
+import { useState, useRef, type ReactNode, type MouseEvent } from "react";
 import { motion } from "motion/react";
 
 export function MagneticButton({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
-  const handleMouse = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouse = (e: MouseEvent<HTMLDivElement>) => {
     const { clientX, clientY } = e;
     const { height, width, left, top } = ref.current!.getBoundingClientRect();
     const middleX = clientX - (left + width / 2);
