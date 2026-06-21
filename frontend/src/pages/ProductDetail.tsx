@@ -59,7 +59,7 @@ export default function ProductDetail() {
     <section className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
       <div className="overflow-hidden rounded-lg border border-border bg-surface shadow-soft dark:border-darkBorder dark:bg-darkSurfaceMuted">
         <div className="flex aspect-[16/9] items-center justify-center bg-surfaceSecondary dark:bg-darkAccentSoft">
-          <img src={product.imageUrl} alt="" className="h-48 w-48 object-contain opacity-80" aria-hidden="true" />
+          <img src={product.imageUrl} alt={product.title} className="h-full w-full object-contain" />
         </div>
         <div className="space-y-4 p-6">
           <div className="flex items-center justify-between">

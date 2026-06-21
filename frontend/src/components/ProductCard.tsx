@@ -57,7 +57,7 @@ export default function ProductCard({ product, isSaved = false, onToggleSave }: 
       </button>
 
       <div className="mb-5 flex aspect-[4/3] items-center justify-center overflow-hidden rounded-lg bg-surfaceSecondary dark:bg-darkAccentSoft">
-        <img src={product.imageUrl} alt="" className="h-20 w-20 object-contain opacity-80" aria-hidden="true" />
+        <img src={product.imageUrl} alt={product.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
       </div>
       <div className="mb-4 flex items-center justify-between gap-3 text-xs font-semibold uppercase text-accent dark:text-darkAccent">
         <span>{product.category}</span>
