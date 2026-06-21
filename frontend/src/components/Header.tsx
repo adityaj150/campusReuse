@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { getToken, logout } from '../services/auth'
 import { useTheme } from '../contexts/ThemeContext'
+import { motion } from 'motion/react'
 
 type NavItem =
   | { label: string; to: string }
@@ -20,11 +21,20 @@ export default function Header() {
   const location = useLocation()
   const { theme, toggleTheme } = useTheme()
 
-  const navLinkClass = (active = false) =>
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+
+  const mobileNavLinkClass = (active = false) =>
     `rounded-lg px-3 py-2 transition ${
       active
         ? 'bg-accent text-white dark:bg-darkAccent dark:text-darkSurface'
         : 'text-textHeading hover:bg-accentSoft hover:text-accent dark:text-darkText dark:hover:bg-darkAccentSoft dark:hover:text-darkAccent'
+    }`
+
+  const desktopNavLinkClass = (active = false) =>
+    `relative z-10 block rounded-lg px-3 py-2 transition-colors ${
+      active
+        ? 'text-accent dark:text-darkAccent font-semibold'
+        : 'text-textHeading dark:text-darkText hover:text-accent dark:hover:text-white'
     }`
 
   return (
@@ -46,19 +56,30 @@ export default function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-4" aria-label="Primary navigation">
-          <ul className="flex items-center gap-2 text-sm font-medium">
-            {navItems.map((item) => (
-              <li key={item.label}>
+          <ul className="flex items-center gap-2 text-sm font-medium" onMouseLeave={() => setHoveredIndex(null)}>
+            {navItems.map((item, index) => (
+              <li 
+                key={item.label} 
+                className="relative"
+                onMouseEnter={() => setHoveredIndex(index)}
+              >
+                {hoveredIndex === index && (
+                  <motion.div
+                    layoutId="nav-hover-pill"
+                    className="absolute inset-0 -z-10 rounded-lg bg-accent/10 dark:bg-darkAccent/20"
+                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                  />
+                )}
                 {'to' in item ? (
                   <Link
                     to={item.to}
-                    className={navLinkClass(location.pathname === item.to)}
+                    className={desktopNavLinkClass(location.pathname === item.to)}
                     aria-current={location.pathname === item.to ? 'page' : undefined}
                   >
                     {item.label}
                   </Link>
                 ) : (
-                  <a href={item.href} className={navLinkClass()}>
+                  <a href={item.href} className={desktopNavLinkClass()}>
                     {item.label}
                   </a>
                 )}
@@ -85,12 +106,12 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => { logout(); window.location.reload(); }}
-                className={navLinkClass()}
+                className={desktopNavLinkClass()}
               >
                 Logout
               </button>
             ) : (
-              <Link to="/login" className={navLinkClass()}>
+              <Link to="/login" className={desktopNavLinkClass()}>
                 Login
               </Link>
             )}
@@ -124,14 +145,14 @@ export default function Header() {
                 {'to' in item ? (
                   <Link
                     to={item.to}
-                    className={`block ${navLinkClass(location.pathname === item.to)}`}
+                    className={`block ${mobileNavLinkClass(location.pathname === item.to)}`}
                     aria-current={location.pathname === item.to ? 'page' : undefined}
                     onClick={() => setOpen(false)}
                   >
                     {item.label}
                   </Link>
                 ) : (
-                  <a href={item.href} className={`block ${navLinkClass()}`} onClick={() => setOpen(false)}>
+                  <a href={item.href} className={`block ${mobileNavLinkClass()}`} onClick={() => setOpen(false)}>
                     {item.label}
                   </a>
                 )}
@@ -167,14 +188,14 @@ export default function Header() {
                   logout();
                   window.location.reload();
                 }}
-                className={`w-full ${navLinkClass()}`}
+                className={`w-full text-left ${mobileNavLinkClass()}`}
               >
                 Logout
               </button>
             ) : (
               <Link
                 to="/login"
-                className={`block w-full ${navLinkClass()}`}
+                className={`block w-full ${mobileNavLinkClass()}`}
                 onClick={() => setOpen(false)}
               >
                 Login

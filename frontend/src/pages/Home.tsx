@@ -18,18 +18,17 @@ export default function Home() {
 
   return (
     <section className="space-y-8">
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-end">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_28rem] lg:items-end">
         <div>
-          <p className="text-sm font-semibold uppercase text-accent dark:text-darkAccent">Campus reuse</p>
           <h1 className="mt-4 max-w-3xl text-4xl font-semibold text-textHeading dark:text-white sm:text-5xl">
-            Discover campus resources, spaces, and gear for every student need.
+            Buy, sell, and discover campus essentials within your student community.
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-text dark:text-darkText">
             Browse mock campus items, reserve rooms, or connect with student services through a simple interface.
           </p>
           <div className="mt-8 flex gap-4">
-            <Link 
-              to="/create-product" 
+            <Link
+              to="/create-product"
               className="inline-flex items-center rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-emerald-800 dark:bg-darkAccent dark:hover:bg-emerald-300"
             >
               <svg className="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

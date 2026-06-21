@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getProductById, createInquiry, logProductView, type Product } from '../services/api'
 import { RecommendedForYou } from '../components/Recommendations'
+import { MagneticButton } from '../components/ui/magnetic-button'
 
 export default function ProductDetail() {
   const { id } = useParams()
@@ -95,14 +96,19 @@ export default function ProductDetail() {
             </div>
           ) : (
             <>
-              <button
-                type="button"
-                onClick={handleInterested}
-                disabled={inquiryStatus.loading || product.status !== 'AVAILABLE'}
-                className="w-full rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800 disabled:opacity-50 dark:bg-darkAccent dark:text-darkSurface dark:hover:bg-emerald-300"
-              >
-                {inquiryStatus.loading ? 'Sending...' : "I'm Interested"}
-              </button>
+              <MagneticButton>
+                <button
+                  type="button"
+                  onClick={handleInterested}
+                  disabled={inquiryStatus.loading || product.status !== 'AVAILABLE'}
+                  className="w-full cursor-pointer rounded-lg bg-gradient-to-b from-accent to-emerald-800 px-4 py-3 text-sm font-medium text-white ring-1 ring-white/20 ring-offset-1 ring-offset-accent ring-inset transition-transform duration-150 active:scale-95 disabled:opacity-50 dark:from-darkAccent dark:to-emerald-700 dark:text-darkSurface dark:ring-offset-darkAccent"
+                >
+                  {inquiryStatus.loading ? 'Sending...' : "I'm Interested"}
+                </button>
+              </MagneticButton>
+              <p className="mt-4 text-center text-xs text-text dark:text-darkText">
+                Tip: Clicking "I'm Interested" will send an email to the seller letting them know. You will find their response and contact details in the dashboard under the incoming requests tab.
+              </p>
               {inquiryStatus.error && (
                 <p className="mt-2 text-sm text-red-600">{inquiryStatus.error}</p>
               )}
