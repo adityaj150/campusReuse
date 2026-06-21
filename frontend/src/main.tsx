@@ -5,15 +5,19 @@ import { GoogleOAuthProvider } from '@react-oauth/google'
 import './index.css'
 import App from './App'
 
+import { ThemeProvider } from './contexts/ThemeContext'
+
 // Provide a fallback client ID or expect the user to have it in their .env
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || 'your-google-client-id.apps.googleusercontent.com'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <ThemeProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ThemeProvider>
     </GoogleOAuthProvider>
   </StrictMode>,
 )
