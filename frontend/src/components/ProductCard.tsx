@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import type { Product } from '../services/api'
 import { toggleSavedItem } from '../services/api'
+import { GlowingEffect } from './ui/glowing-effect'
 
 type ProductCardProps = {
   product: Product
@@ -28,7 +29,15 @@ export default function ProductCard({ product, isSaved = false, onToggleSave }: 
   }
 
   return (
-    <article className="group relative flex h-full flex-col rounded-lg border border-border bg-surface p-5 shadow-soft transition hover:-translate-y-0.5 hover:border-accentBorder dark:border-darkBorder dark:bg-darkSurfaceMuted dark:text-white">
+    <article className="group relative flex h-full flex-col rounded-xl border border-border bg-surface p-5 shadow-soft transition hover:-translate-y-0.5 dark:border-darkBorder dark:bg-darkSurfaceMuted dark:text-white">
+      <GlowingEffect
+        spread={40}
+        glow={true}
+        disabled={false}
+        proximity={64}
+        inactiveZone={0.01}
+        borderWidth={2}
+      />
       {/* Heart Icon */}
       <button
         type="button"
