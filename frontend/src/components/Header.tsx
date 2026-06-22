@@ -24,17 +24,15 @@ export default function Header() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
   const mobileNavLinkClass = (active = false) =>
-    `rounded-lg px-3 py-2 transition ${
-      active
-        ? 'bg-accent text-white dark:bg-darkAccent dark:text-darkSurface'
-        : 'text-textHeading hover:bg-accentSoft hover:text-accent dark:text-darkText dark:hover:bg-darkAccentSoft dark:hover:text-darkAccent'
+    `rounded-lg px-3 py-2 transition ${active
+      ? 'bg-accent text-white dark:bg-darkAccent dark:text-darkSurface'
+      : 'text-textHeading hover:bg-accentSoft hover:text-accent dark:text-darkText dark:hover:bg-darkAccentSoft dark:hover:text-darkAccent'
     }`
 
   const desktopNavLinkClass = (active = false) =>
-    `relative z-10 block rounded-lg px-3 py-2 transition-colors ${
-      active
-        ? 'text-accent dark:text-darkAccent font-semibold'
-        : 'text-textHeading dark:text-darkText hover:text-accent dark:hover:text-white'
+    `relative z-10 block rounded-lg px-3 py-2 transition-colors ${active
+      ? 'text-accent dark:text-darkAccent font-semibold'
+      : 'text-textHeading dark:text-darkText hover:text-accent dark:hover:text-white'
     }`
 
   return (
@@ -46,20 +44,24 @@ export default function Header() {
           aria-label="CampusReuse home"
           onClick={() => setOpen(false)}
         >
-          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-accentSoft text-base font-bold text-accent dark:bg-darkAccentSoft dark:text-darkAccent">
-            CR
+          <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-lg bg-accentSoft text-base font-bold text-accent dark:bg-darkAccentSoft dark:text-darkAccent">
+            <img
+              src={theme === 'dark' ? "/logo.png" : "/logo_light.png"}
+              alt="CampusReuse Logo"
+              className="h-full w-full object-cover"
+            />
           </div>
           <div>
             <p className="text-lg font-semibold text-textHeading dark:text-white">CampusReuse</p>
-            <p className="hidden text-sm text-text dark:text-darkText sm:block">Campus sharing made simple</p>
+            <p className="hidden text-sm text-text dark:text-darkText sm:block">sharing made simple</p>
           </div>
         </Link>
 
         <nav className="hidden md:flex items-center gap-4" aria-label="Primary navigation">
           <ul className="flex items-center gap-2 text-sm font-medium" onMouseLeave={() => setHoveredIndex(null)}>
             {navItems.map((item, index) => (
-              <li 
-                key={item.label} 
+              <li
+                key={item.label}
                 className="relative"
                 onMouseEnter={() => setHoveredIndex(index)}
               >

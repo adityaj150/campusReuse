@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { FormEvent } from 'react'
 import { GooeyInput } from './ui/gooey-input'
 
@@ -13,6 +13,12 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
     event.preventDefault()
     onSearch?.(query.trim())
   }
+
+  useEffect(() => {
+    if (query === '') {
+      onSearch?.('')
+    }
+  }, [query, onSearch])
 
   return (
     <form
