@@ -82,17 +82,17 @@ export default function Dashboard() {
         {activeTab === 'profile' && userProfile && (
           <div className="rounded border bg-white p-6 shadow-soft dark:border-darkBorder dark:bg-darkSurfaceMuted">
             <h2 className="mb-4 text-xl font-semibold text-textHeading dark:text-white">Account Details</h2>
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4 sm:gap-6">
               {userProfile.profilePicture ? (
-                <img src={userProfile.profilePicture} alt={userProfile.name} className="h-24 w-24 rounded-full shadow-sm" />
+                <img src={userProfile.profilePicture} alt={userProfile.name} className="h-16 w-16 shrink-0 rounded-full shadow-sm sm:h-24 sm:w-24" />
               ) : (
-                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-accentSoft text-2xl font-bold text-accent dark:bg-darkAccentSoft dark:text-darkAccent">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-accentSoft text-xl font-bold text-accent dark:bg-darkAccentSoft dark:text-darkAccent sm:h-24 sm:w-24 sm:text-2xl">
                   {userProfile.name.charAt(0).toUpperCase()}
                 </div>
               )}
-              <div>
-                <p className="text-lg font-medium text-textHeading dark:text-white">{userProfile.name}</p>
-                <p className="text-text dark:text-darkText">{userProfile.email}</p>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-lg font-medium text-textHeading dark:text-white">{userProfile.name}</p>
+                <p className="break-all text-sm text-text dark:text-darkText sm:text-base">{userProfile.email}</p>
               </div>
             </div>
           </div>
