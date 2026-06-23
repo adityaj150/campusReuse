@@ -13,6 +13,8 @@ export default function ProductDetail() {
 
   useEffect(() => {
     if (!id) return;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setLoading(true);
     getProductById(Number(id))
       .then((p) => {
         setProduct(p);
