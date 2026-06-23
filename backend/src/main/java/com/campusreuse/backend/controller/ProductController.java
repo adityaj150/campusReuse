@@ -27,11 +27,11 @@ public class ProductController {
     private final com.campusreuse.backend.service.ProductCacheService productCacheService;
     private final com.campusreuse.backend.service.NlpClientService nlpClientService;
 
-    public ProductController(ProductRepository productRepo, UserRepository userRepo, JwtUtil jwtUtil, 
-                             com.campusreuse.backend.service.RecommendationService recommendationService,
-                             com.campusreuse.backend.service.S3Service s3Service,
-                             com.campusreuse.backend.service.ProductCacheService productCacheService,
-                             com.campusreuse.backend.service.NlpClientService nlpClientService) {
+    public ProductController(ProductRepository productRepo, UserRepository userRepo, JwtUtil jwtUtil,
+            com.campusreuse.backend.service.RecommendationService recommendationService,
+            com.campusreuse.backend.service.S3Service s3Service,
+            com.campusreuse.backend.service.ProductCacheService productCacheService,
+            com.campusreuse.backend.service.NlpClientService nlpClientService) {
         this.productRepo = productRepo;
         this.userRepo = userRepo;
         this.jwtUtil = jwtUtil;
@@ -43,14 +43,16 @@ public class ProductController {
 
     // ================= DTOs =================
 
-    @Getter @Setter
+    @Getter
+    @Setter
     static class StatusUpdateRequest {
         private String status;
     }
 
     // Helper to get authenticated user
     private User getAuthenticatedUser(String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) return null;
+        if (authHeader == null || !authHeader.startsWith("Bearer "))
+            return null;
         String token = authHeader.substring(7);
         String email = jwtUtil.extractUsername(token);
         return userRepo.findByEmail(email).orElse(null);
@@ -59,42 +61,47 @@ public class ProductController {
     // ================= Endpoints =================
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAvailableProducts(@RequestParam(value = "search", required = false) String search) {
+    public ResponseEntity<List<Product>> getAvailableProducts(
+            @RequestParam(value = "search", required = false) String search) {
         return ResponseEntity.ok(productCacheService.getAvailableProducts(search));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getProduct(@PathVariable Long id) {
         Product product = productCacheService.getProductById(id);
-        if (product == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (product == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.ok(product);
     }
 
     @GetMapping("/mine")
     public ResponseEntity<?> getMyProducts(@RequestHeader("Authorization") String authHeader) {
         User user = getAuthenticatedUser(authHeader);
-        if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         return ResponseEntity.ok(productRepo.findBySellerIdOrderByCreatedAtDesc(user.getId()));
     }
 
     @PostMapping
     public ResponseEntity<?> createProduct(@RequestHeader("Authorization") String authHeader,
-                                           @RequestParam("title") String title,
-                                           @RequestParam("description") String description,
-                                           @RequestParam("category") String category,
-                                           @RequestParam("price") Double price,
-                                           @RequestParam("condition") String condition,
-                                           @RequestPart(value = "image", required = false) org.springframework.web.multipart.MultipartFile image) {
+            @RequestParam("title") String title,
+            @RequestParam("description") String description,
+            @RequestParam("category") String category,
+            @RequestParam("price") Double price,
+            @RequestParam("condition") String condition,
+            @RequestPart(value = "image", required = false) org.springframework.web.multipart.MultipartFile image) {
         User user = getAuthenticatedUser(authHeader);
-        if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         String imageUrl = null;
         if (image != null && !image.isEmpty()) {
             try {
                 imageUrl = s3Service.uploadImage(image);
-            } catch (java.io.IOException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Image upload failed"));
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(Map.of("error", "Image upload failed: " + e.getMessage()));
             }
         }
 
@@ -117,18 +124,20 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id,
-                                           @RequestHeader("Authorization") String authHeader,
-                                           @RequestParam("title") String title,
-                                           @RequestParam("description") String description,
-                                           @RequestParam("category") String category,
-                                           @RequestParam("price") Double price,
-                                           @RequestParam("condition") String condition,
-                                           @RequestPart(value = "image", required = false) org.springframework.web.multipart.MultipartFile image) {
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam("title") String title,
+            @RequestParam("description") String description,
+            @RequestParam("category") String category,
+            @RequestParam("price") Double price,
+            @RequestParam("condition") String condition,
+            @RequestPart(value = "image", required = false) org.springframework.web.multipart.MultipartFile image) {
         User user = getAuthenticatedUser(authHeader);
-        if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         Product product = productRepo.findById(id).orElse(null);
-        if (product == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (product == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
         if (!product.getSeller().getId().equals(user.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Not your product"));
@@ -137,8 +146,9 @@ public class ProductController {
         if (image != null && !image.isEmpty()) {
             try {
                 product.setImageUrl(s3Service.uploadImage(image));
-            } catch (java.io.IOException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Image upload failed"));
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(Map.of("error", "Image upload failed: " + e.getMessage()));
             }
         }
 
@@ -156,13 +166,15 @@ public class ProductController {
 
     @PutMapping("/{id}/status")
     public ResponseEntity<?> updateStatus(@PathVariable Long id,
-                                          @RequestHeader("Authorization") String authHeader,
-                                          @RequestBody StatusUpdateRequest req) {
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody StatusUpdateRequest req) {
         User user = getAuthenticatedUser(authHeader);
-        if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         Product product = productRepo.findById(id).orElse(null);
-        if (product == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (product == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
         if (!product.getSeller().getId().equals(user.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Not your product"));
@@ -184,10 +196,12 @@ public class ProductController {
     @PostMapping("/{id}/view")
     public ResponseEntity<?> logProductView(@PathVariable Long id, @RequestHeader("Authorization") String authHeader) {
         User user = getAuthenticatedUser(authHeader);
-        if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         Product product = productRepo.findById(id).orElse(null);
-        if (product == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (product == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
         recommendationService.logProductView(user, product);
         return ResponseEntity.ok().build();
@@ -196,7 +210,8 @@ public class ProductController {
     @GetMapping("/me/recommendations")
     public ResponseEntity<?> getRecommendations(@RequestHeader("Authorization") String authHeader) {
         User user = getAuthenticatedUser(authHeader);
-        if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         List<Product> recommendations = recommendationService.getRecommendations(user, 3);
         return ResponseEntity.ok(recommendations);
@@ -205,7 +220,8 @@ public class ProductController {
     @GetMapping("/me/recently-viewed")
     public ResponseEntity<?> getRecentlyViewed(@RequestHeader("Authorization") String authHeader) {
         User user = getAuthenticatedUser(authHeader);
-        if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         List<Product> recentlyViewed = recommendationService.getRecentlyViewed(user.getId());
         return ResponseEntity.ok(recentlyViewed);
