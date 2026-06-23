@@ -48,9 +48,7 @@ services:
       # Email Notifications (Gmail SMTP)
       - MAIL_USERNAME=${MAIL_USERNAME:-}
       - MAIL_APP_PASSWORD=${MAIL_APP_PASSWORD:-}
-      - APP_BASE_URL=${APP_BASE_URL:-http://15.134.217.171}
-    ports:
-      - "8080:8080"
+      - APP_BASE_URL=${APP_BASE_URL:-https://13.238.5.149.nip.io}
     depends_on:
       - db
       - redis
@@ -71,16 +69,17 @@ services:
     networks:
       - campus_network
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-      args:
-        # Empty = use relative URLs via Nginx reverse proxy (no CORS issues)
-        - VITE_API_BASE_URL=${VITE_API_BASE_URL:-}
-    container_name: campusreuse_frontend
+  caddy:
+    image: caddy:2-alpine
+    container_name: campusreuse_caddy
+    restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
     depends_on:
       - backend
     networks:
@@ -88,6 +87,8 @@ services:
 
 volumes:
   postgres_data:
+  caddy_data:
+  caddy_config:
 
 networks:
   campus_network:
