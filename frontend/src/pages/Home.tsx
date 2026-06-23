@@ -26,10 +26,10 @@ export default function Home() {
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-text dark:text-darkText">
             <EncryptedText
-              text="Find great deals, connect with students and give unused items a second life across your campus."
+              text="Find great deals, connect with students and give unused items a second life."
               encryptedClassName="text-neutral-500"
               revealedClassName="text-text dark:text-darkText"
-              revealDelayMs={20}
+              revealDelayMs={10}
             />
           </p>
           <div className="mt-8 flex gap-4">

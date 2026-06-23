@@ -71,7 +71,7 @@ export default function Dashboard() {
     <section className="mx-auto max-w-5xl space-y-8 p-4">
       <h1 className="text-3xl bebas-neue-regular text-textHeading dark:text-white">Dashboard</h1>
 
-      <div className="flex gap-4 border-b border-border dark:border-darkBorder">
+      <div className="flex gap-4 overflow-x-auto whitespace-nowrap border-b border-border pb-2 scrollbar-hide dark:border-darkBorder">
         <button onClick={() => setActiveTab('profile')} className={`px-4 py-2 font-medium ${activeTab === 'profile' ? 'border-b-2 border-accent text-accent' : 'text-text'}`}>My Profile</button>
         <button onClick={() => setActiveTab('received')} className={`px-4 py-2 font-medium ${activeTab === 'received' ? 'border-b-2 border-accent text-accent' : 'text-text'}`}>Incoming Requests</button>
         <button onClick={() => setActiveTab('sent')} className={`px-4 py-2 font-medium ${activeTab === 'sent' ? 'border-b-2 border-accent text-accent' : 'text-text'}`}>My Sent Requests</button>

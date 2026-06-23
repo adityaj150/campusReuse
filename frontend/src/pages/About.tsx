@@ -4,7 +4,8 @@ import { motion } from 'motion/react'
 export default function About() {
   return (
     <section className="overflow-hidden">
-      {/* MacBook Scroll Hero — shows a sleek screen image as the laptop opens */}
+      {/* MacBook Scroll Hero — shows a sleek screen image as the laptop opens (hidden on mobile) */}
+      <div className="hidden md:block">
       <MacbookScroll
         title={
           <span className="text-4xl font-extrabold tracking-tight text-textHeading dark:text-white sm:text-5xl">
@@ -33,6 +34,7 @@ export default function About() {
           </div>
         </div>
       </MacbookScroll>
+      </div>
 
       {/* Full content section — appears naturally below the laptop */}
       <div className="relative mx-auto max-w-3xl px-6 pb-24 pt-16">
