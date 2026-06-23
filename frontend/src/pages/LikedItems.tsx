@@ -24,7 +24,7 @@ export default function LikedItems() {
   return (
     <section>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-textHeading dark:text-white">
+        <h1 className="text-3xl bebas-neue-regular text-textHeading dark:text-white">
           <span className="mr-2">❤️</span> Liked Items
         </h1>
         <p className="mt-2 text-text dark:text-darkText">

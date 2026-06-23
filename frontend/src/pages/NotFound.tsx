@@ -8,7 +8,7 @@ export default function NotFound() {
       <p className="max-w-2xl text-text dark:text-darkText">
         The page you requested does not exist in this CampusReuse scaffold.
       </p>
-      <Link className="inline-flex rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white dark:bg-darkAccent dark:text-darkSurface" to="/">
+      <Link className="inline-flex rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white transition-all duration-150 active:scale-95 dark:bg-darkAccent dark:text-darkSurface" to="/">
         Back home
       </Link>
     </section>

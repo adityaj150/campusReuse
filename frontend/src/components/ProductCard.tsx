@@ -42,7 +42,7 @@ export default function ProductCard({ product, isSaved = false, onToggleSave }: 
       <button
         type="button"
         onClick={handleToggleSave}
-        className="absolute right-3 top-3 z-10 rounded-full bg-white/80 p-2 shadow-sm backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white dark:bg-darkSurface/80 dark:hover:bg-darkSurface"
+        className="absolute right-3 top-3 z-10 rounded-full bg-white/80 p-2 shadow-sm backdrop-blur-sm transition-all duration-200 hover:scale-110 active:scale-95 hover:bg-white dark:bg-darkSurface/80 dark:hover:bg-darkSurface"
         aria-label={saved ? 'Remove from liked items' : 'Add to liked items'}
       >
         <svg
@@ -80,7 +80,7 @@ export default function ProductCard({ product, isSaved = false, onToggleSave }: 
         </span>
         <Link
           to={`/product/${product.id}`}
-          className="rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface dark:bg-darkAccent dark:text-darkSurface dark:hover:bg-emerald-300"
+          className="rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:bg-emerald-800 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface dark:bg-darkAccent dark:text-darkSurface dark:hover:bg-emerald-300"
           aria-label={`View details for ${product.title}`}
         >
           View details

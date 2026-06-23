@@ -37,7 +37,7 @@ export default function Listings() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-end">
         <div>
           <p className="text-sm font-semibold uppercase text-accent dark:text-darkAccent">All listings</p>
-          <h1 className="mt-4 max-w-3xl text-4xl font-semibold text-textHeading dark:text-white sm:text-5xl">
+          <h1 className="mt-4 max-w-3xl text-4xl bebas-neue-regular text-textHeading dark:text-white sm:text-5xl">
             Browse every available campus resource.
           </h1>
         </div>

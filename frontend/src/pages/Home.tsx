@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useProducts } from '../hooks/useProducts'
 import CategoryNav from '../components/CategoryNav'
 import ProductCard from '../components/ProductCard'
+import { EncryptedText } from '../components/ui/encrypted-text'
 import SearchBar from '../components/SearchBar'
 import { RecentlyViewed } from '../components/Recommendations'
 
@@ -20,16 +21,21 @@ export default function Home() {
     <section className="space-y-8">
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_28rem] lg:items-end">
         <div>
-          <h1 className="mt-4 max-w-3xl text-4xl font-semibold text-textHeading dark:text-white sm:text-5xl">
-            Buy, sell, and discover campus essentials within your student community.
+          <h1 className="mt-4 max-w-3xl text-4xl bebas-neue-regular text-textHeading dark:text-white sm:text-5xl">
+            Buy, Sell & Discover Campus Essentials
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-text dark:text-darkText">
-            Find great deals, connect with students and give unused items a second life across your hostel.
+            <EncryptedText
+              text="Find great deals, connect with students and give unused items a second life across your campus."
+              encryptedClassName="text-neutral-500"
+              revealedClassName="text-text dark:text-darkText"
+              revealDelayMs={20}
+            />
           </p>
           <div className="mt-8 flex gap-4">
             <Link
               to="/create-product"
-              className="inline-flex items-center rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-emerald-800 dark:bg-darkAccent dark:text-neutral-900 dark:hover:bg-emerald-300"
+              className="inline-flex items-center rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white shadow-soft transition-all duration-150 hover:bg-emerald-800 active:scale-95 dark:bg-darkAccent dark:text-neutral-900 dark:hover:bg-emerald-300"
             >
               <svg className="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />

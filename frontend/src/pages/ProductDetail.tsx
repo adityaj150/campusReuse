@@ -50,7 +50,7 @@ export default function ProductDetail() {
         <p className="text-sm font-semibold uppercase text-accent dark:text-darkAccent">Listing detail</p>
         <h1 className="text-4xl font-semibold text-textHeading dark:text-white">Listing not found</h1>
         <p className="text-text dark:text-darkText">{error || 'This listing is not available.'}</p>
-        <Link className="inline-flex rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white dark:bg-darkAccent dark:text-darkSurface" to="/listings">
+        <Link className="inline-flex rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white transition-all duration-150 active:scale-95 dark:bg-darkAccent dark:text-darkSurface" to="/listings">
           Back to listings
         </Link>
       </section>

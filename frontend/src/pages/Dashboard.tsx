@@ -69,7 +69,7 @@ export default function Dashboard() {
 
   return (
     <section className="mx-auto max-w-5xl space-y-8 p-4">
-      <h1 className="text-3xl font-semibold text-textHeading dark:text-white">Dashboard</h1>
+      <h1 className="text-3xl bebas-neue-regular text-textHeading dark:text-white">Dashboard</h1>
 
       <div className="flex gap-4 border-b border-border dark:border-darkBorder">
         <button onClick={() => setActiveTab('profile')} className={`px-4 py-2 font-medium ${activeTab === 'profile' ? 'border-b-2 border-accent text-accent' : 'text-text'}`}>My Profile</button>
@@ -106,10 +106,10 @@ export default function Dashboard() {
                 <p className="mt-2 text-sm text-gray-500">Status: {inq.status}</p>
                 {inq.status === 'PENDING' && (
                   <div className="mt-4 flex gap-2">
-                    <button onClick={() => handleRespond(inq.id, 'SHARE_EMAIL')} className="rounded bg-accent px-3 py-1 text-sm text-white hover:bg-emerald-700">Share Email</button>
-                    <button onClick={() => handleRespond(inq.id, 'SHARE_PHONE')} className="rounded bg-accent px-3 py-1 text-sm text-white hover:bg-emerald-700">Share Phone</button>
-                    <button disabled className="rounded bg-gray-300 px-3 py-1 text-sm text-gray-600 opacity-50 cursor-not-allowed">In-Platform Chat (Coming Soon)</button>
-                    <button onClick={() => handleRespond(inq.id, 'REJECT')} className="rounded bg-red-100 px-3 py-1 text-sm text-red-700 hover:bg-red-200">Reject</button>
+                    <button onClick={() => handleRespond(inq.id, 'SHARE_EMAIL')} className="rounded bg-accent px-3 py-1 text-sm text-white transition-all duration-150 hover:bg-emerald-700 active:scale-95">Share Email</button>
+                    <button onClick={() => handleRespond(inq.id, 'SHARE_PHONE')} className="rounded bg-accent px-3 py-1 text-sm text-white transition-all duration-150 hover:bg-emerald-700 active:scale-95">Share Phone</button>
+                    <button disabled className="cursor-not-allowed rounded bg-gray-300 px-3 py-1 text-sm text-gray-600 opacity-50">In-Platform Chat (Coming Soon)</button>
+                    <button onClick={() => handleRespond(inq.id, 'REJECT')} className="rounded bg-red-100 px-3 py-1 text-sm text-red-700 transition-all duration-150 hover:bg-red-200 active:scale-95">Reject</button>
                   </div>
                 )}
                 {inq.status === 'SHARED_EMAIL' && <p className="mt-2 text-sm text-green-600">You shared your email. The buyer will contact you.</p>}

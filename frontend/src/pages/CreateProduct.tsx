@@ -96,8 +96,8 @@ export default function CreateProduct() {
           </div>
 
           <div className="flex justify-end gap-4">
-            <button type="button" onClick={() => navigate(-1)} className="rounded px-4 py-2 text-sm font-medium hover:bg-surfaceSecondary dark:hover:bg-darkAccentSoft">Cancel</button>
-            <button type="submit" disabled={loading} className="rounded bg-accent px-6 py-2 text-sm font-medium text-white hover:bg-emerald-800 disabled:opacity-50 dark:bg-darkAccent dark:hover:bg-emerald-300">
+            <button type="button" onClick={() => navigate(-1)} className="rounded px-4 py-2 text-sm font-medium transition-all duration-150 hover:bg-surfaceSecondary active:scale-95 dark:hover:bg-darkAccentSoft">Cancel</button>
+            <button type="submit" disabled={loading} className="rounded bg-accent px-6 py-2 text-sm font-medium text-white transition-all duration-150 hover:bg-emerald-800 active:scale-95 disabled:pointer-events-none disabled:opacity-50 dark:bg-darkAccent dark:hover:bg-emerald-300">
               {loading ? 'Publishing...' : 'Publish Listing'}
             </button>
           </div>
