@@ -120,23 +120,42 @@ export default function Header() {
           </div>
         </nav>
 
-        <button
-          type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-textHeading transition hover:bg-accentSoft hover:text-accent dark:text-darkText dark:hover:bg-darkAccentSoft dark:hover:text-darkAccent md:hidden"
-          onClick={() => setOpen((current) => !current)}
-          aria-label="Toggle navigation menu"
-          aria-expanded={open}
-          aria-controls="mobile-navigation"
-        >
-          <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d={open ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}
-            />
-          </svg>
-        </button>
+        <div className="flex items-center gap-1 md:hidden">
+          {getToken() ? (
+            <button
+              type="button"
+              onClick={() => { logout(); window.location.reload(); }}
+              className="rounded-lg px-3 py-2 text-sm font-semibold text-textHeading transition-all hover:bg-accentSoft hover:text-accent active:scale-95 dark:text-darkText dark:hover:bg-darkAccentSoft dark:hover:text-darkAccent"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link 
+              to="/login" 
+              className="rounded-lg px-3 py-2 text-sm font-semibold text-accent transition-all hover:bg-accentSoft active:scale-95 dark:text-darkAccent dark:hover:bg-darkAccentSoft"
+            >
+              Login
+            </Link>
+          )}
+
+          <button
+            type="button"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-textHeading transition hover:bg-accentSoft hover:text-accent dark:text-darkText dark:hover:bg-darkAccentSoft dark:hover:text-darkAccent"
+            onClick={() => setOpen((current) => !current)}
+            aria-label="Toggle navigation menu"
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
+          >
+            <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d={open ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}
+              />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {open && (
@@ -182,27 +201,6 @@ export default function Header() {
                 </>
               )}
             </button>
-            <div className="h-px w-full bg-border dark:bg-darkBorder" />
-            {getToken() ? (
-              <button
-                type="button"
-                onClick={() => {
-                  logout();
-                  window.location.reload();
-                }}
-                className={`w-full text-left ${mobileNavLinkClass()}`}
-              >
-                Logout
-              </button>
-            ) : (
-              <Link
-                to="/login"
-                className={`block w-full ${mobileNavLinkClass()}`}
-                onClick={() => setOpen(false)}
-              >
-                Login
-              </Link>
-            )}
           </div>
         </nav>
       )}
