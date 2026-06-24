@@ -73,7 +73,7 @@ export default function ProductCard({ product, isSaved = false, onToggleSave }: 
       >
         
         {/* FRONT */}
-        <div className="flex h-full flex-col p-5 [backface-visibility:hidden]">
+        <div className="flex h-full flex-col rounded-xl bg-surface p-5 dark:bg-darkSurfaceMuted [-webkit-backface-visibility:hidden] [backface-visibility:hidden]">
           <div className="mb-5 flex aspect-[4/3] items-center justify-center overflow-hidden rounded-lg bg-surfaceSecondary dark:bg-darkAccentSoft">
             <img src={product.imageUrl} alt={product.title} className="h-full w-full object-cover transition-transform duration-500" />
           </div>
@@ -106,7 +106,7 @@ export default function ProductCard({ product, isSaved = false, onToggleSave }: 
         </div>
 
         {/* BACK */}
-        <div className="absolute inset-0 flex h-full flex-col p-5 [transform:rotateY(180deg)] [backface-visibility:hidden]">
+        <div className="absolute inset-0 flex h-full flex-col rounded-xl bg-surface p-5 dark:bg-darkSurfaceMuted [-webkit-backface-visibility:hidden] [backface-visibility:hidden] [transform:rotateY(180deg)]">
           <h3 className="mb-4 text-xl font-bold text-accent dark:text-darkAccent">{product.title}</h3>
           <p className="flex-1 overflow-y-auto pr-2 text-sm leading-6 text-text dark:text-darkText scrollbar-thin scrollbar-track-transparent scrollbar-thumb-accentSoft dark:scrollbar-thumb-darkAccentSoft">
             {product.description}
