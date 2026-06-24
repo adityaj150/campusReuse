@@ -48,7 +48,7 @@ services:
       # Email Notifications (Gmail SMTP)
       - MAIL_USERNAME=${MAIL_USERNAME:-}
       - MAIL_APP_PASSWORD=${MAIL_APP_PASSWORD:-}
-      - APP_BASE_URL=${APP_BASE_URL:-https://13.238.5.149.nip.io}
+      - APP_BASE_URL=${APP_BASE_URL:-https://campus-reuse.vercel.app}
     depends_on:
       - db
       - redis
