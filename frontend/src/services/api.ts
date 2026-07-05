@@ -79,6 +79,20 @@ export async function updateProductStatus(id: number, status: string): Promise<P
   return response.json();
 }
 
+export async function deleteProduct(id: number): Promise<any> {
+  const response = await fetch(`${API_BASE}/api/products/${id}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.error || 'Failed to delete product');
+  }
+
+  return response.json();
+}
+
 // Inquiries
 
 export async function createInquiry(productId: number): Promise<any> {

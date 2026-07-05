@@ -15,4 +15,6 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
     
     // Check if an inquiry already exists for a buyer and product
     boolean existsByBuyerIdAndProductId(Long buyerId, Long productId);
+
+    void deleteByProductId(Long productId);
 }

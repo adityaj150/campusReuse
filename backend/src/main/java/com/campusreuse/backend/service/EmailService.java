@@ -1,6 +1,7 @@
 package com.campusreuse.backend.service;
 
 import com.campusreuse.backend.model.Inquiry;
+import com.campusreuse.backend.model.Product;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -82,6 +83,56 @@ public class EmailService {
             System.out.println("[EmailService] Interest notification sent to " + sellerEmail);
         } catch (Exception e) {
             System.err.println("[EmailService] Failed to send email: " + e.getMessage());
+        }
+    }
+
+    @Async
+    public void sendAdminDeletionNotification(Product product) {
+        try {
+            if (fromEmail == null || fromEmail.isBlank()) {
+                System.out.println("[EmailService] Mail not configured, skipping admin deletion email.");
+                return;
+            }
+
+            String sellerEmail = product.getSeller().getEmail();
+            String sellerName = product.getSeller().getName();
+            String productTitle = product.getTitle();
+
+            String subject = "Your Listing was Removed — " + productTitle;
+
+            String htmlBody = """
+                <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background-color: #f8faf8; border-radius: 12px;">
+                    <div style="background: linear-gradient(135deg, #b91c1c, #991b1b); padding: 24px; border-radius: 12px 12px 0 0; text-align: center;">
+                        <h1 style="color: #ffffff; margin: 0; font-size: 22px;">CampusReuse</h1>
+                        <p style="color: #fecaca; margin: 4px 0 0; font-size: 13px;">Important Notice</p>
+                    </div>
+                    <div style="background: #ffffff; padding: 32px 24px; border-radius: 0 0 12px 12px; border: 1px solid #e5e7eb;">
+                        <p style="font-size: 16px; color: #1f2937;">Hi <strong>%s</strong>,</p>
+                        <p style="font-size: 15px; color: #374151; line-height: 1.6;">
+                            We are writing to inform you that your listing has been removed from CampusReuse by our moderation team.
+                        </p>
+                        <div style="background: #fef2f2; border-left: 4px solid #b91c1c; padding: 16px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+                            <p style="margin: 0 0 4px; font-size: 17px; font-weight: 600; color: #7f1d1d;">%s</p>
+                            <p style="margin: 0; font-size: 14px; color: #991b1b;">Reason: Inappropriate for the platform</p>
+                        </div>
+                        <p style="font-size: 14px; color: #6b7280; line-height: 1.6;">
+                            Our platform is dedicated to maintaining a safe and appropriate environment for all students. If you believe this was a mistake, please reach out to the admin team.
+                        </p>
+                    </div>
+                </div>
+                """.formatted(sellerName, productTitle);
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setFrom(fromEmail);
+            helper.setTo(sellerEmail);
+            helper.setSubject(subject);
+            helper.setText(htmlBody, true);
+
+            mailSender.send(message);
+            System.out.println("[EmailService] Admin deletion notification sent to " + sellerEmail);
+        } catch (Exception e) {
+            System.err.println("[EmailService] Failed to send admin deletion email: " + e.getMessage());
         }
     }
 }

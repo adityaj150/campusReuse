@@ -3,6 +3,9 @@ package com.campusreuse.backend.controller;
 import com.campusreuse.backend.model.Product;
 import com.campusreuse.backend.model.User;
 import com.campusreuse.backend.repository.ProductRepository;
+import com.campusreuse.backend.repository.InquiryRepository;
+import com.campusreuse.backend.repository.ProductViewRepository;
+import com.campusreuse.backend.repository.SavedItemRepository;
 import com.campusreuse.backend.repository.UserRepository;
 import com.campusreuse.backend.security.JwtUtil;
 import lombok.AllArgsConstructor;
@@ -20,25 +23,38 @@ import java.util.Map;
 public class ProductController {
 
     private final ProductRepository productRepo;
+    private final InquiryRepository inquiryRepo;
+    private final ProductViewRepository productViewRepo;
+    private final SavedItemRepository savedItemRepo;
     private final UserRepository userRepo;
     private final JwtUtil jwtUtil;
     private final com.campusreuse.backend.service.RecommendationService recommendationService;
     private final com.campusreuse.backend.service.S3Service s3Service;
     private final com.campusreuse.backend.service.ProductCacheService productCacheService;
     private final com.campusreuse.backend.service.NlpClientService nlpClientService;
+    private final com.campusreuse.backend.service.EmailService emailService;
 
-    public ProductController(ProductRepository productRepo, UserRepository userRepo, JwtUtil jwtUtil,
+    public ProductController(ProductRepository productRepo, 
+            InquiryRepository inquiryRepo,
+            ProductViewRepository productViewRepo,
+            SavedItemRepository savedItemRepo,
+            UserRepository userRepo, JwtUtil jwtUtil,
             com.campusreuse.backend.service.RecommendationService recommendationService,
             com.campusreuse.backend.service.S3Service s3Service,
             com.campusreuse.backend.service.ProductCacheService productCacheService,
-            com.campusreuse.backend.service.NlpClientService nlpClientService) {
+            com.campusreuse.backend.service.NlpClientService nlpClientService,
+            com.campusreuse.backend.service.EmailService emailService) {
         this.productRepo = productRepo;
+        this.inquiryRepo = inquiryRepo;
+        this.productViewRepo = productViewRepo;
+        this.savedItemRepo = savedItemRepo;
         this.userRepo = userRepo;
         this.jwtUtil = jwtUtil;
         this.recommendationService = recommendationService;
         this.s3Service = s3Service;
         this.productCacheService = productCacheService;
         this.nlpClientService = nlpClientService;
+        this.emailService = emailService;
     }
 
     // ================= DTOs =================
@@ -162,6 +178,49 @@ public class ProductController {
         productCacheService.evictProductCaches();
         nlpClientService.indexProduct(product);
         return ResponseEntity.ok(product);
+    }
+
+    @org.springframework.transaction.annotation.Transactional
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id, @RequestHeader("Authorization") String authHeader) {
+        User user = getAuthenticatedUser(authHeader);
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        Product product = productRepo.findById(id).orElse(null);
+        if (product == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        boolean isSeller = product.getSeller().getId().equals(user.getId());
+        boolean isAdmin = user.getRole() == User.Role.ADMIN;
+
+        if (!isSeller && !isAdmin) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Not authorized to delete this product"));
+        }
+
+        // Send email if deleted by admin (and admin is not the seller)
+        if (isAdmin && !isSeller) {
+            emailService.sendAdminDeletionNotification(product);
+        }
+
+        // 1. Delete image from S3 if exists
+        if (product.getImageUrl() != null && !product.getImageUrl().isEmpty()) {
+            s3Service.deleteImage(product.getImageUrl());
+        }
+
+        // 2. Delete related records to prevent foreign key constraint violations
+        inquiryRepo.deleteByProductId(id);
+        productViewRepo.deleteByProductId(id);
+        savedItemRepo.deleteByProductId(id);
+
+        // 3. Delete product from DB
+        productRepo.delete(product);
+
+        // 4. Clear cache & NLP index
+        productCacheService.evictProductCaches();
+        nlpClientService.deleteProduct(id);
+
+        return ResponseEntity.ok(Map.of("message", "Product deleted successfully"));
     }
 
     @PutMapping("/{id}/status")

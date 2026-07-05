@@ -25,10 +25,22 @@ public class User implements java.io.Serializable {
     @com.fasterxml.jackson.annotation.JsonIgnore
     private String email;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String profilePicture;     // URL from Google
 
     @Column
     @com.fasterxml.jackson.annotation.JsonIgnore
     private String phoneNumber;        // Optional, for sharing with buyers
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role = Role.USER;
+
+    public Role getRole() {
+        return role != null ? role : Role.USER;
+    }
+
+    public enum Role {
+        USER, ADMIN
+    }
 }

@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import type { Product } from '../services/api'
-import { toggleSavedItem } from '../services/api'
+import { toggleSavedItem, deleteProduct } from '../services/api'
+import { getUser } from '../services/auth'
 import { GlowingEffect } from './ui/glowing-effect'
 
 type ProductCardProps = {
@@ -14,6 +15,22 @@ export default function ProductCard({ product, isSaved = false, onToggleSave }: 
   const [saved, setSaved] = useState(isSaved)
   const [animating, setAnimating] = useState(false)
   const [flipped, setFlipped] = useState(false)
+
+  const currentUser = getUser()
+  const isAdmin = currentUser?.role === 'ADMIN'
+
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (!confirm('Are you sure you want to delete this listing?')) return
+    try {
+      await deleteProduct(product.id)
+      window.location.reload()
+    } catch (err) {
+      alert('Failed to delete product')
+      console.error(err)
+    }
+  }
 
   const handleToggleSave = async (e: React.MouseEvent) => {
     e.preventDefault()
@@ -94,14 +111,25 @@ export default function ProductCard({ product, isSaved = false, onToggleSave }: 
             <span className="rounded-md bg-surfaceSecondary px-3 py-2 text-sm font-medium text-textHeading dark:bg-darkAccentSoft dark:text-white">
               {product.price === 0 ? 'Free' : `₹${product.price}`}
             </span>
-            <Link
-              to={`/product/${product.id}`}
-              onClick={(e) => e.stopPropagation()}
-              className="relative z-20 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:bg-emerald-800 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface dark:bg-darkAccent dark:text-darkSurface dark:hover:bg-emerald-300"
-              aria-label={`View details for ${product.title}`}
-            >
-              View details
-            </Link>
+            <div className="flex gap-2">
+              {isAdmin && (
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="relative z-20 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:bg-red-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface dark:bg-red-700 dark:hover:bg-red-600"
+                >
+                  Delete
+                </button>
+              )}
+              <Link
+                to={`/product/${product.id}`}
+                onClick={(e) => e.stopPropagation()}
+                className="relative z-20 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:bg-emerald-800 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface dark:bg-darkAccent dark:text-darkSurface dark:hover:bg-emerald-300"
+                aria-label={`View details for ${product.title}`}
+              >
+                View details
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -115,14 +143,25 @@ export default function ProductCard({ product, isSaved = false, onToggleSave }: 
             <span className="rounded-md bg-surfaceSecondary px-3 py-2 text-sm font-medium text-textHeading dark:bg-darkAccentSoft dark:text-white">
               {product.price === 0 ? 'Free' : `₹${product.price}`}
             </span>
-            <Link
-              to={`/product/${product.id}`}
-              onClick={(e) => e.stopPropagation()}
-              className="relative z-20 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:bg-emerald-800 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface dark:bg-darkAccent dark:text-darkSurface dark:hover:bg-emerald-300"
-              aria-label={`View details for ${product.title}`}
-            >
-              View details
-            </Link>
+            <div className="flex gap-2">
+              {isAdmin && (
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="relative z-20 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:bg-red-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface dark:bg-red-700 dark:hover:bg-red-600"
+                >
+                  Delete
+                </button>
+              )}
+              <Link
+                to={`/product/${product.id}`}
+                onClick={(e) => e.stopPropagation()}
+                className="relative z-20 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:bg-emerald-800 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface dark:bg-darkAccent dark:text-darkSurface dark:hover:bg-emerald-300"
+                aria-label={`View details for ${product.title}`}
+              >
+                View details
+              </Link>
+            </div>
           </div>
         </div>
       </div>

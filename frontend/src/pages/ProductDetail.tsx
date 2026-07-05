@@ -1,15 +1,20 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { getProductById, createInquiry, logProductView, type Product } from '../services/api'
+import { Link, useParams, useNavigate } from 'react-router-dom'
+import { getProductById, createInquiry, logProductView, deleteProduct, type Product } from '../services/api'
+import { getUser } from '../services/auth'
 import { RecommendedForYou } from '../components/Recommendations'
 import { MagneticButton } from '../components/ui/magnetic-button'
 
 export default function ProductDetail() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [inquiryStatus, setInquiryStatus] = useState<{loading: boolean, success?: string, error?: string}>({ loading: false })
+
+  const currentUser = getUser()
+  const isOwner = currentUser?.id === product?.seller.id || currentUser?.role === 'ADMIN'
 
   useEffect(() => {
     if (!id) return;
@@ -18,7 +23,6 @@ export default function ProductDetail() {
     getProductById(Number(id))
       .then((p) => {
         setProduct(p);
-        // Log view for recommendations (fail silently so it doesn't break UI)
         logProductView(p.id).catch(() => {});
       })
       .catch((err) => setError(err.message || 'Unable to load listing'))
@@ -35,6 +39,17 @@ export default function ProductDetail() {
       setInquiryStatus({ loading: false, error: err.message });
     }
   };
+
+  const handleDelete = async () => {
+    if (!product) return
+    if (!confirm('Are you sure you want to delete this listing?')) return
+    try {
+      await deleteProduct(product.id)
+      navigate('/listings')
+    } catch (err: any) {
+      alert(err.message || 'Failed to delete listing')
+    }
+  }
 
   if (loading) {
     return (
@@ -76,6 +91,15 @@ export default function ProductDetail() {
           <h1 className="text-4xl font-semibold text-textHeading dark:text-white">{product.title}</h1>
           <p className="text-sm text-text dark:text-darkText">Posted by: {product.seller.name}</p>
           <p className="text-base leading-7 text-text dark:text-darkText">{product.description}</p>
+          
+          {isOwner && (
+            <button
+              onClick={handleDelete}
+              className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 transition-colors"
+            >
+              Delete Listing
+            </button>
+          )}
         </div>
       </div>
 

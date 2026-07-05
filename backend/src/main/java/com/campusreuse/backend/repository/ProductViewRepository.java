@@ -27,4 +27,6 @@ public interface ProductViewRepository extends JpaRepository<ProductView, Long> 
     // Find all products viewed by a specific user
     @Query("SELECT pv.product.id FROM ProductView pv WHERE pv.user.id = :userId")
     List<Long> findProductIdsByUserId(Long userId);
+
+    void deleteByProductId(Long productId);
 }

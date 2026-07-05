@@ -6,7 +6,8 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  profilePicture?: string;
+  profilePicture: string;
+  role: string;
 }
 
 export interface AuthResponse {
@@ -32,17 +33,30 @@ export async function googleSignIn(idToken: string): Promise<AuthResponse> {
     throw new Error(data.error ?? 'Google authentication failed');
   }
   localStorage.setItem('campusreuse_token', data.token);
+  localStorage.setItem('campusreuse_user', JSON.stringify(data.user));
   return data as AuthResponse;
 }
 
 /** Remove the stored token – logs the user out */
 export function logout() {
   localStorage.removeItem('campusreuse_token');
+  localStorage.removeItem('campusreuse_user');
 }
 
 /** Retrieve the stored token, or null if not logged in */
 export function getToken(): string | null {
   return localStorage.getItem('campusreuse_token');
+}
+
+/** Retrieve the stored user object, or null if not logged in */
+export function getUser(): User | null {
+  const userStr = localStorage.getItem('campusreuse_user');
+  if (!userStr) return null;
+  try {
+    return JSON.parse(userStr);
+  } catch (e) {
+    return null;
+  }
 }
 
 

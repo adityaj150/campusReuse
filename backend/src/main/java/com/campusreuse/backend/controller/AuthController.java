@@ -55,6 +55,7 @@ public class AuthController {
         private String name;
         private String email;
         private String profilePicture;
+        private String role;
     }
 
     // ======================== Google Sign-In ========================
@@ -83,6 +84,7 @@ public class AuthController {
                                 .email(email)
                                 .name(name != null ? name : email)
                                 .profilePicture(picture)
+                                .role("jadhav2005.adi@gmail.com".equalsIgnoreCase(email) ? User.Role.ADMIN : User.Role.USER)
                                 .build();
                         return userRepo.save(newUser);
                     });
@@ -90,6 +92,10 @@ public class AuthController {
             // Update profile info in case it changed on Google's side
             user.setName(name != null ? name : user.getName());
             user.setProfilePicture(picture);
+            // Ensure admin role is always maintained for this email
+            if ("jadhav2005.adi@gmail.com".equalsIgnoreCase(email)) {
+                user.setRole(User.Role.ADMIN);
+            }
             userRepo.save(user);
 
             // 3. Issue our own JWT
@@ -99,7 +105,8 @@ public class AuthController {
                     user.getId(),
                     user.getName(),
                     user.getEmail(),
-                    user.getProfilePicture()
+                    user.getProfilePicture(),
+                    user.getRole().name()
             );
 
             return ResponseEntity.ok(new AuthResponse(jwt, userDto));
@@ -123,7 +130,7 @@ public class AuthController {
                         .body(Map.of("error", "User not found"));
             }
             UserDto dto = new UserDto(
-                    user.getId(), user.getName(), user.getEmail(), user.getProfilePicture());
+                    user.getId(), user.getName(), user.getEmail(), user.getProfilePicture(), user.getRole().name());
             return ResponseEntity.ok(dto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
