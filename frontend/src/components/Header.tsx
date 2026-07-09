@@ -13,6 +13,7 @@ const navItems: NavItem[] = [
   { label: 'Listings', to: '/listings' },
   { label: 'Liked Items', to: '/liked' },
   { label: 'Dashboard', to: '/dashboard' },
+  { label: 'Ride Share', to: '/rideshare' },
   { label: 'About', to: '/about' },
 ]
 

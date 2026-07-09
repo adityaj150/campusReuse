@@ -112,6 +112,7 @@ public class AuthController {
             return ResponseEntity.ok(new AuthResponse(jwt, userDto));
 
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Authentication failed: " + e.getMessage()));
         }

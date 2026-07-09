@@ -175,3 +175,63 @@ export async function getSavedProductIds(): Promise<number[]> {
   if (!response.ok) return [];
   return response.json();
 }
+
+// Ride Share / Trips
+
+export interface Trip {
+  tripId: number;
+  createdBy: number;
+  source: string;
+  destination: string;
+  tripDate: string;
+  departureTime: string;
+  transportType: string;
+  maxMembers: number;
+  currentMembers: number;
+  estimatedFare: number;
+  notes: string;
+  status: string;
+  createdAt: string;
+}
+
+export async function getTrips(): Promise<Trip[]> {
+  const response = await fetch(`${API_BASE}/api/trips`, { headers: getAuthHeaders() });
+  if (!response.ok) throw new Error('Failed to fetch trips');
+  return response.json();
+}
+
+export async function getJoinedTrips(userId: number): Promise<Trip[]> {
+  const response = await fetch(`${API_BASE}/api/trips/joined?userId=${userId}`, { headers: getAuthHeaders() });
+  if (!response.ok) throw new Error('Failed to fetch joined trips');
+  return response.json();
+}
+
+export async function getTripById(id: number): Promise<Trip> {
+  const response = await fetch(`${API_BASE}/api/trips/${id}`, { headers: getAuthHeaders() });
+  if (!response.ok) throw new Error('Failed to load trip');
+  return response.json();
+}
+
+export async function createTrip(data: Partial<Trip>): Promise<Trip> {
+  const response = await fetch(`${API_BASE}/api/trips`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to create trip');
+  }
+  return response.json();
+}
+
+export async function joinTrip(tripId: number, userId: number): Promise<void> {
+  const response = await fetch(`${API_BASE}/api/trips/${tripId}/join?userId=${userId}`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to join trip');
+  }
+}

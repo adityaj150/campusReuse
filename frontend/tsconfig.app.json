@@ -9,6 +9,8 @@
     "composite": true,
 
     /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",

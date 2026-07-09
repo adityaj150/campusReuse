@@ -10,6 +10,11 @@ import RequireAuth from '../components/RequireAuth'
 import Login from '../pages/Login'
 import LikedItems from '../pages/LikedItems'
 
+import RideShareHome from '../pages/RideShareHome'
+import DiscoverTrips from '../pages/DiscoverTrips'
+import CreateTrip from '../pages/CreateTrip'
+import TripChat from '../pages/TripChat'
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -20,6 +25,13 @@ export default function AppRoutes() {
       <Route path="/product/:id" element={<RequireAuth><ProductDetail /></RequireAuth>} />
       <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
       <Route path="/create-product" element={<RequireAuth><CreateProduct /></RequireAuth>} />
+      
+      {/* Ride Share Routes */}
+      <Route path="/rideshare" element={<RequireAuth><RideShareHome /></RequireAuth>} />
+      <Route path="/rideshare/discover" element={<RequireAuth><DiscoverTrips /></RequireAuth>} />
+      <Route path="/rideshare/create" element={<RequireAuth><CreateTrip /></RequireAuth>} />
+      <Route path="/rideshare/trip/:tripId" element={<RequireAuth><TripChat /></RequireAuth>} />
+
       <Route path="/about" element={<About />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
