@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Client } from '@stomp/stompjs';
-import SockJS from 'sockjs-client/dist/sockjs';
+import SockJS from 'sockjs-client';
 import { getUser } from '../services/auth';
 import { getTripById } from '../services/api';
 import type { Trip } from '../services/api';
