@@ -57,7 +57,21 @@ export default function RideShareHome() {
                   <li key={trip.tripId} className="flex justify-between items-center bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
                     <div>
                       <p className="font-medium text-sm">{trip.source} to {trip.destination}</p>
-                      <p className="text-xs text-gray-500 mt-1">{new Date(trip.tripDate).toLocaleDateString()} at {trip.departureTime}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {(() => {
+                          let dateStr = trip.tripDate;
+                          if (Array.isArray(trip.tripDate)) {
+                            const [y, m, d] = trip.tripDate;
+                            dateStr = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                          }
+                          let timeStr = trip.departureTime;
+                          if (Array.isArray(trip.departureTime)) {
+                            const [h, m, s = 0] = trip.departureTime;
+                            timeStr = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+                          }
+                          return `${new Date(dateStr).toLocaleDateString()} at ${timeStr}`;
+                        })()}
+                      </p>
                     </div>
                     <button 
                       onClick={() => navigate(`/rideshare/trip/${trip.tripId}`)}
@@ -81,7 +95,21 @@ export default function RideShareHome() {
                   <li key={trip.tripId} className="flex justify-between items-center bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
                     <div>
                       <p className="font-medium text-sm">{trip.source} to {trip.destination}</p>
-                      <p className="text-xs text-gray-500 mt-1">{new Date(trip.tripDate).toLocaleDateString()} at {trip.departureTime}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {(() => {
+                          let dateStr = trip.tripDate;
+                          if (Array.isArray(trip.tripDate)) {
+                            const [y, m, d] = trip.tripDate;
+                            dateStr = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                          }
+                          let timeStr = trip.departureTime;
+                          if (Array.isArray(trip.departureTime)) {
+                            const [h, m, s = 0] = trip.departureTime;
+                            timeStr = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+                          }
+                          return `${new Date(dateStr).toLocaleDateString()} at ${timeStr}`;
+                        })()}
+                      </p>
                     </div>
                     <button 
                       onClick={() => navigate(`/rideshare/trip/${trip.tripId}`)}

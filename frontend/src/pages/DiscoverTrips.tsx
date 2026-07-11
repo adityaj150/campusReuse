@@ -24,7 +24,19 @@ export default function DiscoverTrips() {
       const now = new Date();
       // Filter out trips that have already departed
       const upcomingTrips = allTrips.filter(t => {
-        const departureTime = new Date(`${t.tripDate}T${t.departureTime}`);
+        let dateStr = t.tripDate;
+        if (Array.isArray(t.tripDate)) {
+          const [y, m, d] = t.tripDate;
+          dateStr = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        }
+        let timeStr = t.departureTime;
+        if (Array.isArray(t.departureTime)) {
+          const [h, m, s = 0] = t.departureTime;
+          timeStr = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        } else if (typeof timeStr === 'string' && timeStr.split(':').length === 2) {
+          timeStr = `${timeStr}:00`;
+        }
+        const departureTime = new Date(`${dateStr}T${timeStr}`);
         return departureTime > now;
       });
 
@@ -109,7 +121,19 @@ export default function DiscoverTrips() {
                       {trip.source} ➔ {trip.destination}
                     </h3>
                     <p className="text-sm text-text dark:text-darkText mt-1">
-                      {trip.tripDate} • {trip.departureTime}
+                      {(() => {
+                        let dateStr = trip.tripDate;
+                        if (Array.isArray(trip.tripDate)) {
+                          const [y, m, d] = trip.tripDate;
+                          dateStr = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                        }
+                        let timeStr = trip.departureTime;
+                        if (Array.isArray(trip.departureTime)) {
+                          const [h, m, s = 0] = trip.departureTime;
+                          timeStr = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+                        }
+                        return `${dateStr} • ${timeStr}`;
+                      })()}
                     </p>
                   </div>
                   <span className="bg-accent/10 text-accent px-2 py-1 rounded text-xs font-medium">
