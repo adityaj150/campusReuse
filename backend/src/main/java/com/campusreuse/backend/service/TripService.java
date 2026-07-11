@@ -42,6 +42,19 @@ public class TripService {
 
     @Transactional
     public Trip createTrip(Trip trip) {
+        Long userId = trip.getCreatedBy();
+        
+        List<TripMember> memberships = tripMemberRepository.findByUserId(userId);
+        List<Long> tripIds = memberships.stream().map(TripMember::getTripId).collect(Collectors.toList());
+        List<Trip> activeTrips = tripRepository.findAllById(tripIds).stream()
+            .filter(t -> !"CANCELLED".equals(t.getStatus()) && !"COMPLETED".equals(t.getStatus()) &&
+                         LocalDateTime.now().isBefore(t.getTripDate().atTime(t.getDepartureTime()).plusHours(1)))
+            .collect(Collectors.toList());
+
+        if (!activeTrips.isEmpty()) {
+            throw new RuntimeException("You already have an active trip. Please wait for it to expire or cancel it before publishing a new one.");
+        }
+
         trip.setCurrentMembers(1);
         trip.setStatus("OPEN");
         trip.setCreatedAt(LocalDateTime.now());
