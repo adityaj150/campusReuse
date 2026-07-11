@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client/dist/sockjs';
 import { getUser } from '../services/auth';
-import { getTripById } from '../services/api';
+import { getTripById, leaveTrip } from '../services/api';
 import type { Trip } from '../services/api';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
@@ -19,6 +19,7 @@ type ChatMessage = {
 
 export default function TripChat() {
   const { tripId } = useParams();
+  const navigate = useNavigate();
   const user = getUser();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
@@ -135,6 +136,20 @@ export default function TripChat() {
     setInput('');
   };
 
+  const isCreator = user && trip?.createdBy === user.id;
+
+  const handleLeaveTrip = async () => {
+    if (!user || !tripId || !trip) return;
+    if (confirm("Are you sure you want to leave this trip?")) {
+      try {
+        await leaveTrip(Number(tripId), user.id);
+        navigate('/rideshare');
+      } catch (err: any) {
+        alert(err.message || 'Failed to leave trip');
+      }
+    }
+  };
+
   return (
     <div className="max-w-3xl mx-auto flex flex-col h-[650px] border border-border dark:border-darkBorder rounded-xl overflow-hidden bg-surface dark:bg-darkSurface shadow-lg">
       {/* Header */}
@@ -150,6 +165,14 @@ export default function TripChat() {
             <span className="text-sm bg-white/20 px-2 py-1 rounded">
               {trip.currentMembers}/{trip.maxMembers} Members
             </span>
+          )}
+          {!isCreator && !expired && trip && trip.status !== 'CANCELLED' && trip.status !== 'COMPLETED' && (
+            <button 
+              onClick={handleLeaveTrip}
+              className="text-xs bg-red-500 hover:bg-red-600 px-3 py-1.5 font-medium rounded transition"
+            >
+              Leave Trip
+            </button>
           )}
           <span className={`w-2 h-2 rounded-full ${connected ? 'bg-green-400' : 'bg-red-400'}`} title={connected ? 'Connected' : 'Disconnected'} />
         </div>

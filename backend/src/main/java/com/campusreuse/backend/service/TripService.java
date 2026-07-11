@@ -82,6 +82,17 @@ public class TripService {
             throw new RuntimeException("You have already joined this trip");
         }
 
+        List<TripMember> memberships = tripMemberRepository.findByUserId(userId);
+        List<Long> tripIds = memberships.stream().map(TripMember::getTripId).collect(Collectors.toList());
+        List<Trip> activeTrips = tripRepository.findAllById(tripIds).stream()
+            .filter(t -> !"CANCELLED".equals(t.getStatus()) && !"COMPLETED".equals(t.getStatus()) &&
+                         LocalDateTime.now().isBefore(t.getTripDate().atTime(t.getDepartureTime()).plusHours(1)))
+            .collect(Collectors.toList());
+
+        if (!activeTrips.isEmpty()) {
+            throw new RuntimeException("You have already joined an active trip. Please leave the previous one before joining a new one.");
+        }
+
         TripMember member = new TripMember();
         member.setTripId(tripId);
         member.setUserId(userId);
