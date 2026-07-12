@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getTrips, getJoinedTrips, joinTrip } from '../services/api';
 import type { Trip } from '../services/api';
 import { getUser } from '../services/auth';
@@ -93,8 +93,15 @@ export default function DiscoverTrips() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-textHeading dark:text-darkText">Discover Trips</h1>
-      <p className="text-text dark:text-darkText">Browse available rides and join a trip.</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-textHeading dark:text-darkText">Discover Trips</h1>
+          <p className="text-text dark:text-darkText mt-1">Browse available rides and join a trip.</p>
+        </div>
+        <Link to="/rideshare" className="rounded-lg bg-surfaceSecondary px-4 py-2 text-sm font-semibold text-textHeading transition hover:bg-gray-300 dark:bg-darkAccentSoft dark:text-white dark:hover:bg-gray-700">
+          ← Back to Dashboard
+        </Link>
+      </div>
       
       {loading && <p className="text-text dark:text-darkText">Loading trips...</p>}
       {error && <p className="text-red-500">{error}</p>}

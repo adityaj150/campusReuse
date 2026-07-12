@@ -57,6 +57,9 @@ export default function About() {
               hostel essentials and study materials sit unused while other
               students spend money buying the same items brand new.
             </p>
+            <p className="mt-4">
+              Similarly, students frequently travel home for weekends or commute to events alone, spending excessively on cabs or fuel, while classmates making the exact same journey struggle to find affordable transport.
+            </p>
           </div>
 
           <motion.div
@@ -101,6 +104,20 @@ export default function About() {
               in using their google accounts, browse listings, save favorite
               items, communicate securely with sellers and receive personalized
               recommendations based on their interests and interactions.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <h3 className="mb-3 text-sm font-bold uppercase tracking-widest bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+              RideShare & Connectivity
+            </h3>
+            <p>
+              To further support our campus community, we've integrated a real-time RideShare feature. Students can easily discover, create, and join carpool trips for weekend travels or events. Powered by WebSockets, our live Trip Chat allows passengers and drivers to coordinate seamlessly within the platform, making campus travel cheaper and more sustainable.
             </p>
           </motion.div>
 

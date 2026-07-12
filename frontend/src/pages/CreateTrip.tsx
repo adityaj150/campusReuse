@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createTrip } from '../services/api';
 import { getUser } from '../services/auth';
 
@@ -51,7 +51,12 @@ export default function CreateTrip() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <h1 className="text-3xl font-bold text-textHeading dark:text-darkText">Publish a Trip</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold text-textHeading dark:text-darkText">Publish a Trip</h1>
+        <Link to="/rideshare" className="rounded-lg bg-surfaceSecondary px-4 py-2 text-sm font-semibold text-textHeading transition hover:bg-gray-300 dark:bg-darkAccentSoft dark:text-white dark:hover:bg-gray-700">
+          ← Back to Dashboard
+        </Link>
+      </div>
       <div className="bg-surface dark:bg-darkSurface p-6 rounded-xl border border-border dark:border-darkBorder shadow-sm">
         {error && (
           <div className="mb-4 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm">
