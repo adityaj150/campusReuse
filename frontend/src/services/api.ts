@@ -235,3 +235,14 @@ export async function joinTrip(tripId: number, userId: number): Promise<void> {
     throw new Error(err.error || 'Failed to join trip');
   }
 }
+
+export async function leaveTrip(tripId: number, userId: number): Promise<void> {
+  const response = await fetch(`${API_BASE}/api/trips/${tripId}/leave?userId=${userId}`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to leave trip');
+  }
+}

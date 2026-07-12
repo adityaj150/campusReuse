@@ -32,8 +32,12 @@ public class TripController {
     }
 
     @PostMapping
-    public ResponseEntity<Trip> createTrip(@RequestBody Trip trip) {
-        return ResponseEntity.ok(tripService.createTrip(trip));
+    public ResponseEntity<?> createTrip(@RequestBody Trip trip) {
+        try {
+            return ResponseEntity.ok(tripService.createTrip(trip));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
     }
 
     @PostMapping("/{id}/join")
